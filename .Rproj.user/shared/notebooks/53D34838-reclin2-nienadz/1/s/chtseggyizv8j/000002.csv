@@ -1,0 +1,6 @@
+"0","```r
+dane_wynikowe <- link(pary_comp, selection = \"threshold\")
+dane_wynikowe
+```"
+"1","  Total number of pairs: 3 pairs
+"

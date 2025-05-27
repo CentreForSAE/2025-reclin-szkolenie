@@ -1,0 +1,46 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(stringdist)
+```
+
+Wczytanie danych i utworzenie sztucznych identyfikatorów
+
+```{r}
+dane1 <- read.csv("dane/zbior1.csv")
+dane1$id <- 1
+dane2 <- read.csv("dane/zbior2.csv")
+dane2$id <- 1
+```
+
+Połączenie danych po zmiennej id z wykorzystaniem full join (argument `all=TRUE`)
+```{r}
+razem <- merge(x = dane1,
+               y = dane2,
+               by = "id",
+               all = TRUE)
+razem
+```
+Wyznaczenie podobieństwa między imionami
+
+```{r}
+razem <- transform(razem,
+                   imie_sim1 = stringsim(imie.x, imie.y, method = "jw"),
+                   imie_sim2 = stringsim(imie.x, imie.y, method = "lcs"),
+                   imie_sim3 = stringsim(imie.x, imie.y, method = "jaccard", q=2))
+razem
+```
+
+Zadanie:
+
+- wyznaczyć podobieństwa między drugimi imionami 3 różnymi metodami (utworzyć zmienne o nazwie imie2_sim1, imie2_sim2, itd)
+- wyznaczyć podobieństwa między nazwiskami 3 różnymi metodami (j.w.)
+- wyznaczyć podobieństwa między adresmi 3 różnymi metodami (j.w)
+
+
+
+
+

@@ -1,0 +1,8 @@
+"0","```r
+cmp <- cmp_identical()
+x <- cmp(c(\"john\", \"mary\", \"susan\", \"jack\"), 
+         c(\"johan\", \"mary\", \"susanna\", NA))
+x
+```"
+"1","[1] FALSE  TRUE FALSE    NA
+"

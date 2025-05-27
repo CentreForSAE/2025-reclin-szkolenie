@@ -1,0 +1,123 @@
+# Rozwiązania zadań
+
+---
+
+## Rozwiązanie Zadania 1
+
+### Krok 1: Wektor porównań γ
+
+**Porównanie:**
+
+- Imię: Piotr = Piotr → γ₁ = 1
+- Nazwisko: Wiśniewski = Wiśniewski → γ₂ = 1  
+- Płeć: M = M → γ₃ = 1
+- Data ur.: 1978-12-03 = 1978-12-03 → γ₄ = 1
+- Miasto: Kraków ≠ Krakow → γ₅ = 0 (różna pisownia)
+
+**γ = (1, 1, 1, 1, 0)**
+
+### Krok 2: Obliczenie wag
+
+| Pole | γᵢ | Wzór | Obliczenie | Waga |
+|------|----|----- |------------|------|
+| Imię | 1 | log₂(0.95/0.01) | log₂(95) | +6.57 |
+| Nazwisko | 1 | log₂(0.98/0.003) | log₂(326.67) | +8.35 |
+| Płeć | 1 | log₂(0.99/0.5) | log₂(1.98) | +0.99 |
+| Data ur. | 1 | log₂(0.99/0.004) | log₂(247.5) | +7.95 |
+| Miasto | 0 | log₂(0.08/0.98) | log₂(0.082) | -3.61 |
+
+### Krok 3: Prawdopodobieństwo wstępne
+$$w_0 = \log_2\left(\frac{0.0002}{0.9998}\right) = \log_2(0.0002) = -12.29$$
+
+### Krok 4: Suma wag
+$$W = -12.29 + 6.57 + 8.35 + 0.99 + 7.95 + (-3.61) = +7.96$$
+
+### Krok 5: Konwersja na prawdopodobieństwo
+$$P(\text{match}) = \frac{2^{7.96}}{1 + 2^{7.96}} = \frac{249.3}{250.3} = 0.996$$
+
+### Interpretacja:
+**Prawdopodobieństwo = 99.6%** - bardzo wysokie prawdopodobieństwo dopasowania mimo błędu w pisowni miasta.
+
+---
+
+## Rozwiązanie Zadania 2
+
+### Część 1: Obecny przypadek (Maria vs Marta)
+
+**Wektor γ = (0, 1, 1, 1, 1)** - różnica tylko w imieniu
+
+**Wagi:**
+
+| Pole | γᵢ | Waga |
+|------|----|----- |
+| Imię | 0 | log₂(0.12/0.985) = -3.04 |
+| Nazwisko | 1 | log₂(0.96/0.002) = +8.91 |
+| Płeć | 1 | log₂(0.99/0.5) = +0.99 |
+| Data ur. | 1 | log₂(0.99/0.003) = +8.37 |
+| PESEL | 1 | log₂(0.995/0.0000005) = +20.91 |
+
+$$w_0 = \log_2(0.0001/0.9999) = -13.29$$
+$$W = -13.29 + (-3.04) + 8.91 + 0.99 + 8.37 + 20.91 = +22.85$$
+$$P(\text{match}) = \frac{2^{22.85}}{1 + 2^{22.85}} = 0.9999997$$
+
+### Część 2: Gdyby imiona były identyczne
+$$W = -13.29 + 6.86 + 8.91 + 0.99 + 8.37 + 20.91 = +32.75$$
+$$P(\text{match}) ≈ 1.0000000$$
+
+### Część 3: Porównanie wpływu błędów
+
+- **Błąd w imieniu:** obniża prawdopodobieństwo o ~0.0000003
+- **Błąd w nazwisku:** obniżyłby prawdopodobieństwo znacznie bardziej (waga nazwiska +8.91 vs imienia +6.86)
+
+**Wniosek:** PESEL dominuje wynik - nawet przy błędach w imieniu, prawdopodobieństwo pozostaje praktycznie 100%.
+
+---
+
+## Rozwiązanie Zadania 3
+
+### Para A: Jan Nowak (błąd w dacie)
+
+**γ = (1, 1, 1, 0, 1)** - różnica w dacie urodzenia
+
+**Wagi:**
+
+| Pole | γᵢ | Waga |
+|------|----|----- |
+| Imię | 1 | +6.86 |
+| Nazwisko | 1 | +8.60 |
+| Płeć | 1 | +0.99 |
+| Data ur. | 0 | -5.31 |
+| Miasto | 1 | +2.68 |
+
+$$W_A = -12.64 + 6.86 + 8.60 + 0.99 + (-5.31) + 2.68 = +1.18$$
+$$P_A(\text{match}) = \frac{2^{1.18}}{1 + 2^{1.18}} = 0.694$$
+
+### Para B: Anna Zielińska (błąd w ostatniej cyfrze PESEL)
+
+**γ = (1, 1, 1, 1, 0)** - różnica w PESEL
+
+**Wagi:**
+
+| Pole | γᵢ | Waga |
+|------|----|----- |
+| Imię | 1 | +6.86 |
+| Nazwisko | 1 | +8.60 |
+| Płeć | 1 | +0.99 |
+| Data ur. | 1 | +8.37 |
+| PESEL | 0 | -11.61 |
+
+$$W_B = -12.64 + 6.86 + 8.60 + 0.99 + 8.37 + (-11.61) = +0.57$$
+$$P_B(\text{match}) = \frac{2^{0.57}}{1 + 2^{0.57}} = 0.597$$
+
+### Porównanie i wnioski:
+
+- **Para A: 69.4%** - błąd w dacie urodzenia
+- **Para B: 59.7%** - błąd w PESEL
+
+**Para A ma większe prawdopodobieństwo** mimo że data urodzenia jest bardzo unikalnym polem. Wynika to z faktu, że PESEL ma jeszcze większą wagę i jego błąd bardziej obniża prawdopodobieństwo.
+
+**Wpływ błędów:**
+
+- Błędy w bardzo unikalnych polach (PESEL, data ur.) mają największy negatywny wpływ
+- Błędy w polach średnio unikalnych (imię, nazwisko) są łagodniej "karane"
+- Błędy w polach powszechnych (płeć) mają minimalny wpływ

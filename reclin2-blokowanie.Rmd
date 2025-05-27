@@ -1,0 +1,42 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(reclin2)
+```
+
+```{r}
+dane1 <- read.csv("dane/zbior3a.csv")
+dane2 <- read.csv("dane/zbior3b.csv")
+```
+
+Tworzymy pary bez blokowania (każdy z każdym)
+
+```{r}
+pary_wszystkie <- pair(x = dane1, y = dane2)
+pary_wszystkie
+```
+Blokujemy według konkretnej zmiennej
+
+```{r}
+pary_plec <- pair_blocking(x = dane1, y = dane2, on = c("plec"))
+pary_plec
+```
+
+Blokujemy według więcej niż jednej zmiennej
+
+```{r}
+pary_wiecej <- pair_blocking(x = dane1, y = dane2, on = c("plec", "dataur"))
+pary_wiecej
+```
+Blokujemy gdy zmienna blokująca może się trochę różnić:
+
+- zakładamy, że może być różnica w jednej ze zmiennych
+- przykład: w excelu
+
+```{r}
+pary_roznice <- pair_minsim(x = dane1, y = dane2, on = c("plec", "dataur"), minsim = 1)
+pary_roznice
+```

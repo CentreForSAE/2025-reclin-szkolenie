@@ -1,0 +1,8 @@
+"0","```r
+pary_roznice <- pair_minsim(x = dane1, y = dane2, on = c(\"plec\", \"dataur\"), minsim = 1)
+pary_roznice
+```"
+"1","  First data set:  6 records
+  Second data set: 6 records
+  Total number of pairs: 19 pairs
+"

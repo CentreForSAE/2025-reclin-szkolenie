@@ -1,0 +1,9 @@
+"0","```r
+score_prosty <- score_simple(pary_comp, \"score\", 
+                             on = c(\"imie\", \"imie2\", \"nazwisko\", \"adres\"))
+score_prosty
+```"
+"1","  First data set:  6 records
+  Second data set: 6 records
+  Total number of pairs: 36 pairs
+"

@@ -1,0 +1,15 @@
+"0","```r
+pair(dane1,dane2) |>
+  compare_pairs(on = c(\"imie\", \"imie2\", \"nazwisko\", \"adres\"), 
+                default_comparator = cmp_jarowinkler()) |>
+  score_simple(\"score\",
+               on = c(\"imie\", \"imie2\", \"nazwisko\", \"adres\")) |>
+  select_threshold(\"threshold\", score = \"score\", threshold = 2) |>
+  transform(prawda = .x == .y) |>
+  xtabs(~ prawda + threshold, data = _)
+```"
+"1","       threshold
+prawda  FALSE TRUE
+  FALSE    24    6
+  TRUE      0    6
+"

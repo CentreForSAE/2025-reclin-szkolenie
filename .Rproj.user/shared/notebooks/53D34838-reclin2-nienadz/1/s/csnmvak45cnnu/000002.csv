@@ -1,0 +1,13 @@
+"0","```r
+pary_jw <- compare_pairs(pairs = pary,
+                         on = c(\"imie\", \"imie2\", \"nazwisko\", \"adres\"), 
+                         default_comparator = cmp_jarowinkler())
+
+score_jw_prosty <- score_simple(pary_jw, \"score\", 
+                                on = c(\"imie\", \"imie2\", \"nazwisko\", \"adres\"))
+score_jw_prosty
+```"
+"1","  First data set:  6 records
+  Second data set: 6 records
+  Total number of pairs: 36 pairs
+"

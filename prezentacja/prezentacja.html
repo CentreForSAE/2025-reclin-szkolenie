@@ -1,0 +1,2668 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="prezentacja_files/libs/clipboard/clipboard.min.js"></script>
+<script src="prezentacja_files/libs/quarto-html/tabby.min.js"></script>
+<script src="prezentacja_files/libs/quarto-html/popper.min.js"></script>
+<script src="prezentacja_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="prezentacja_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="prezentacja_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="prezentacja_files/libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.40">
+
+  <meta name="author" content="Maciej Beręsewicz (Urząd Statystyczny w Poznaniu)">
+  <title>Probabilisyczne łączenie rekordów</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="prezentacja_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="prezentacja_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="prezentacja_files/libs/revealjs/dist/theme/quarto-bbe7401fe57d4b791b917637bb662036.css">
+  <link href="prezentacja_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="prezentacja_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="prezentacja_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="prezentacja_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <link href="prezentacja_files/libs/countdown-0.4.0/countdown.css" rel="stylesheet">
+  <script src="prezentacja_files/libs/countdown-0.4.0/countdown.js"></script>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Probabilisyczne łączenie rekordów</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Maciej Beręsewicz (Urząd Statystyczny w Poznaniu) 
+</div>
+</div>
+</div>
+
+</section>
+<section>
+<section id="początek" class="title-slide slide level1 center" data-number="1">
+<h1><span class="header-section-number">1</span> Początek</h1>
+
+</section>
+<section id="oczekiwania-dot.-szkolenia" class="slide level2">
+<h2>Oczekiwania dot. szkolenia</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="countdown" id="timer_a784d959" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
+<code class="countdown-time"><span class="countdown-digits minutes">07</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+</div>
+</div>
+<p>Proszę wejść na stronę www.menti.com i podać kod</p>
+<p><strong>7379 4838</strong></p>
+</section>
+<section id="oczekiwania-dot.-szkolenia-1" class="slide level2">
+<h2>Oczekiwania dot. szkolenia</h2>
+<p>Wyniki</p>
+</section>
+<section id="doświadczenie-w-zakresie-integracji-danych" class="slide level2">
+<h2>Doświadczenie w zakresie integracji danych</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="countdown" id="timer_8efc1bdb" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
+<code class="countdown-time"><span class="countdown-digits minutes">07</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+</div>
+</div>
+<p>Proszę wejść na stronę www.menti.com i podać kod</p>
+<p><strong>3507 6668</strong></p>
+</section>
+<section id="doświadczenie-w-zakresie-integracji-danych-1" class="slide level2">
+<h2>Doświadczenie w zakresie integracji danych</h2>
+<p>Wyniki</p>
+</section>
+<section id="wprowadzenie" class="slide level2">
+<h2>Wprowadzenie</h2>
+<ol type="1">
+<li>Wprowadzenie do łączenia danych</li>
+<li>Procedura probabilistycznego łączenia rekordów</li>
+<li>Porównywanie tekstów</li>
+<li>Blokowanie rekordów do porównań</li>
+<li>Łączenie rekordów: nienadzorowane</li>
+<li>Łączenie rekordów: nadzorowane</li>
+</ol>
+</section>
+<section id="motywacja" class="slide level2">
+<h2>Motywacja</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Rejestr</th>
+<th style="text-align: right;">Liczba cudzoziemców</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PESEL</td>
+<td style="text-align: right;">2 004 765</td>
+</tr>
+<tr class="even">
+<td>ZUS</td>
+<td style="text-align: right;">957 539</td>
+</tr>
+<tr class="odd">
+<td>MF</td>
+<td style="text-align: right;">1 513 129</td>
+</tr>
+<tr class="even">
+<td>KRUS</td>
+<td style="text-align: right;">67 932</td>
+</tr>
+<tr class="odd">
+<td>NFZ</td>
+<td style="text-align: right;">2 034 434</td>
+</tr>
+<tr class="even">
+<td>UdSC</td>
+<td style="text-align: right;">545 873</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="motywacja-1" class="slide level2">
+<h2>Motywacja</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Rejestr</th>
+<th style="text-align: right;">Etap1</th>
+<th style="text-align: right;">Etap2</th>
+<th style="text-align: right;">Bez identyfikatorów</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>KRUS</td>
+<td style="text-align: right;">4 674</td>
+<td style="text-align: right;">18 317</td>
+<td style="text-align: right;">42 693</td>
+</tr>
+<tr class="even">
+<td>MF</td>
+<td style="text-align: right;">1 043 769</td>
+<td style="text-align: right;">1 132 840</td>
+<td style="text-align: right;">352 088</td>
+</tr>
+<tr class="odd">
+<td>NFZ</td>
+<td style="text-align: right;">1 987 884</td>
+<td style="text-align: right;">1 987 891</td>
+<td style="text-align: right;">42 524</td>
+</tr>
+<tr class="even">
+<td>ZUS</td>
+<td style="text-align: right;">624 113</td>
+<td style="text-align: right;">760 765</td>
+<td style="text-align: right;">117 926</td>
+</tr>
+<tr class="odd">
+<td>Wszystkie</td>
+<td style="text-align: right;">1 988 650</td>
+<td style="text-align: right;">1 989 390</td>
+<td style="text-align: right;">–</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="motywacja-2" class="slide level2">
+<h2>Motywacja</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Imie</th>
+<th>Imie2</th>
+<th>Nazwisko</th>
+<th>Rok urodzenia</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Miguel</td>
+<td>Luis</td>
+<td>Pereira Tinoco</td>
+<td>1969</td>
+</tr>
+<tr class="even">
+<td>Miguel Luis</td>
+<td></td>
+<td>Pereira-Tinoco</td>
+<td>1969</td>
+</tr>
+<tr class="odd">
+<td>Miguel</td>
+<td></td>
+<td>Pereira-Tinoco</td>
+<td>1968</td>
+</tr>
+<tr class="even">
+<td>Thi</td>
+<td>Hy</td>
+<td>Dao</td>
+<td>1993</td>
+</tr>
+<tr class="odd">
+<td>Dao Thi Hy</td>
+<td></td>
+<td></td>
+<td>1993</td>
+</tr>
+<tr class="even">
+<td>Thi</td>
+<td></td>
+<td>Dao</td>
+<td>1992</td>
+</tr>
+</tbody>
+</table>
+</section></section>
+<section>
+<section id="wprowdzenie-do-łączenia-danych" class="title-slide slide level1 center" data-number="2">
+<h1><span class="header-section-number">2</span> Wprowdzenie do łączenia danych</h1>
+
+</section>
+<section id="łączenie-deterministyczne" class="slide level2">
+<h2>Łączenie deterministyczne</h2>
+
+<img data-src="https://1.bp.blogspot.com/-IlS27_IERRk/VXXmC_DZHKI/AAAAAAAAIyM/WqqfjygxDYg/s1600/relacje.png" class="r-stretch quarto-figure-center"><p class="caption">Przykładowe łączenie danych po kluczach (źródło: <a href="https://phpmajster.blogspot.com/2015/06/sql-aliasy-i-zaczenia-wielu-tabel-za.html" class="uri">https://phpmajster.blogspot.com/2015/06/sql-aliasy-i-zaczenia-wielu-tabel-za.html</a>)</p></section>
+<section id="łączenie-probabilistyczne" class="slide level2">
+<h2>Łączenie probabilistyczne</h2>
+
+<img data-src="images/roszka.png" class="r-stretch quarto-figure-center"><p class="caption">Przykładowe łączenie danych bez kluczy (źródło: Roszka (2012))</p></section>
+<section id="łączenie-probabilistyczne-procedura" class="slide level2">
+<h2>Łączenie probabilistyczne (procedura)</h2>
+
+<img data-src="images/procedura.png" class="r-stretch quarto-figure-center"><p class="caption">Algorytm integracji danych. Źródło: Data Integration Manual (2006)</p></section>
+<section id="łączenie-probabilistyczne-literatura" class="slide level2">
+<h2>Łączenie probabilistyczne (literatura)</h2>
+
+<img data-src="images/literatura1.png" class="r-stretch quarto-figure-center"><p class="caption">Binette, O., &amp; Steorts, R. C. (2022). (Almost) all of entity resolution. Science Advances, 8(12)</p></section>
+<section id="łączenie-probabilistyczne-literatura-1" class="slide level2">
+<h2>Łączenie probabilistyczne (literatura)</h2>
+
+<img data-src="images/roszka-dr.png" class="r-stretch quarto-figure-center"><p class="caption">Źródło: https://www.wbc.poznan.pl/publication/326096</p></section></section>
+<section>
+<section id="porównywanie-napisów" class="title-slide slide level1 center" data-number="3">
+<h1><span class="header-section-number">3</span> Porównywanie napisów</h1>
+
+</section>
+<section id="problem" class="slide level2">
+<h2>Problem</h2>
+<p>Jak wyznaczyć odległość między następującymi rekordami?</p>
+<table class="caption-top">
+<caption>Przykładowe dane</caption>
+<thead>
+<tr class="header">
+<th>Imie</th>
+<th>Imie2</th>
+<th>Nazwisko</th>
+<th>Data urodzenia</th>
+<th>Gmina</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Maciej</td>
+<td>E</td>
+<td>Beręsewicz</td>
+<td>1987</td>
+<td>Poznań</td>
+</tr>
+<tr class="even">
+<td>Maciej Eryk</td>
+<td></td>
+<td>Berecewicz</td>
+<td>1987</td>
+<td>Poznań</td>
+</tr>
+<tr class="odd">
+<td>Maciej</td>
+<td>Eryk</td>
+<td>Berensewicz</td>
+<td>1987</td>
+<td>Białystok</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="miary-odległości-między-napisami" class="slide level2">
+<h2>Miary odległości między napisami</h2>
+
+<img data-src="https://www.baeldung.com/wp-content/uploads/sites/4/2020/11/sim-families1.png" class="r-stretch quarto-figure-center"><p class="caption">Lista miar odległości między napisami (źródło: https://www.baeldung.com/cs/string-similarity-edit-distance)</p></section>
+<section id="pakiety-w-r-do-wyznaczania-odległości" class="slide level2">
+<h2>Pakiety w R do wyznaczania odległości</h2>
+<ul>
+<li>pakiet <code>stringdist</code> (artykuł: Van der Loo, M. P. (2014). The stringdist package for approximate string matching. <em>R Journal</em>, <em>6</em>(1), 111.)</li>
+<li>pakiet <code>stringi</code> (artykuł: Gagolewski, M. (2022). stringi: Fast and portable character string processing in R. <em>Journal of Statistical Software</em>, <em>103</em>, 1-59.)</li>
+<li>pakiet <code>reclin2</code> (artykuł: van der Laan, D. J. (2022). reclin2: a Toolkit for Record Linkage and Deduplication. <em>R Journal</em>, <em>14</em>(2).)</li>
+</ul>
+</section>
+<section id="miary-odległości" class="slide level2">
+<h2>Miary odległości</h2>
+<ul>
+<li>Zastąpienie znaku, jak w “foo” -&gt; “boo”.</li>
+<li>Usunięcie znaku, jak w ‘foo’ -&gt; ‘oo’.</li>
+<li>Wstawienie znaku, jak w ‘foo’ -&gt; ‘floo’.</li>
+<li>Transpozycja dwóch sąsiadujących znaków, jak w ‘foo’ -&gt; ‘ofo’.</li>
+</ul>
+</section>
+<section id="odległość-hamminga" class="slide level2">
+<h2>Odległość Hamminga</h2>
+<ul>
+<li><p><strong>Odległośc Hamminga</strong> to miara odmienności dwóch ciągów o takiej samej długości, wyrażająca liczbę miejsc (pozycji), na których te dwa ciągi się różnią. Innymi słowy jest to najmniejsza liczba zmian (operacji zastępowania elementu innym), jakie pozwalają przeprowadzić jeden ciąg na drugi.</p></li>
+<li><p><u>Uwaga</u>: tylko ciągi o tej samej długości</p>
+<table class="caption-top">
+<tbody>
+<tr class="odd">
+<td>B</td>
+<td>E</td>
+<td>R</td>
+<td><strong>Ę</strong></td>
+<td><strong>S</strong></td>
+<td>E</td>
+<td>W</td>
+<td>I</td>
+<td>C</td>
+<td>Z</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>E</td>
+<td>R</td>
+<td><strong>E</strong></td>
+<td><strong>C</strong></td>
+<td>E</td>
+<td>W</td>
+<td>I</td>
+<td>C</td>
+<td>Z</td>
+</tr>
+</tbody>
+</table></li>
+</ul>
+</section>
+<section id="odległość-hamminga-ćwiczenia" class="slide level2">
+<h2>Odległość Hamminga (ćwiczenia)</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="countdown" id="timer_2c3466af" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
+<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+</div>
+</div>
+<ul>
+<li>Ćwiczenie: ile wynosi odległość Hamminga dla następujących napisów:
+<ul>
+<li>warmińsko-mazurskie / warminsko mazurskie</li>
+<li>miasto Poznań / miasto Poznan</li>
+</ul></li>
+</ul>
+</section>
+<section id="odległość-hamminga-przykład-w-r" class="slide level2">
+<h2>Odległość Hamminga (przykład w R)</h2>
+<ul>
+<li>Przykład dla równych napisów</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb1-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"berecewicz"</span>,</span>
+<span id="cb1-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"hamming"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+<ul>
+<li>Przykład dla równych napisów</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"warmińsko-mazurskie"</span>,</span>
+<span id="cb3-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"warminsko mazurskie"</span>,</span>
+<span id="cb3-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"hamming"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+</section>
+<section id="odległość-hamminga-przykład-w-r-1" class="slide level2">
+<h2>Odległość Hamminga (przykład w R)</h2>
+<ul>
+<li>Przykład dla napisów o nierównej długości</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"warmińsko-mazurskie"</span>,</span>
+<span id="cb5-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"warminskomazurskie"</span>,</span>
+<span id="cb5-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"hamming"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] Inf</code></pre>
+</div>
+</div>
+</section>
+<section id="odległość-hamminga-przykład-w-r-2" class="slide level2">
+<h2>Odległość Hamminga (przykład w R)</h2>
+<ul>
+<li>Przykład dla równych napisów</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a><span class="fu">stringsim</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb7-2"><a href=""></a>          <span class="at">b =</span> <span class="st">"berecewicz"</span>,</span>
+<span id="cb7-3"><a href=""></a>          <span class="at">method =</span> <span class="st">"hamming"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8</code></pre>
+</div>
+</div>
+<p>Wyznaczone jako</p>
+<p><span class="math display">\[
+1 - \frac{\text{dist}}{\text{max (długość tekstów)}}
+\]</span></p>
+</section>
+<section id="odległość-hamminga-przykład-w-r-3" class="slide level2">
+<h2>Odległość Hamminga (przykład w R)</h2>
+<ul>
+<li>Odległość między wektorem, a referencją</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a><span class="fu">stringsim</span>(<span class="at">a =</span> <span class="fu">c</span>(<span class="st">"Beręsewicz"</span>, <span class="st">"Berencewicz"</span>, <span class="st">"Beręcewicz"</span>),</span>
+<span id="cb9-2"><a href=""></a>          <span class="at">b =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb9-3"><a href=""></a>          <span class="at">method =</span> <span class="st">"hamming"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9 0.0 0.8</code></pre>
+</div>
+</div>
+<ul>
+<li>Odległość między wektorem, a wektorem (macierz)</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a><span class="fu">stringsimmatrix</span>(<span class="at">a =</span> <span class="fu">c</span>(<span class="st">"Beręsewicz"</span>, <span class="st">"Berencewicz"</span>, <span class="st">"Beręcewicz"</span>),</span>
+<span id="cb11-2"><a href=""></a>                <span class="at">b =</span> <span class="fu">c</span>(<span class="st">"Beręsewicz"</span>, <span class="st">"Berencewicz"</span>, <span class="st">"Beręcewicz"</span>),</span>
+<span id="cb11-3"><a href=""></a>                <span class="at">method =</span> <span class="st">"hamming"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3]
+[1,]  1.0    0  0.9
+[2,]  0.0    1  0.0
+[3,]  0.9    0  1.0</code></pre>
+</div>
+</div>
+</section>
+<section id="najdłuższy-wspólny-podciąg" class="slide level2">
+<h2>Najdłuższy wspólny podciąg</h2>
+<ul>
+<li><p>ang. <em>Longest Common Substring</em> (LCS)</p></li>
+<li><p>Odległość LCS jest wtedy liczbą niesparowanych znaków w obu łańcuchach</p>
+<table class="caption-top">
+<tbody>
+<tr class="odd">
+<td>B</td>
+<td>E</td>
+<td>R</td>
+<td><strong>Ę</strong></td>
+<td><strong>S</strong></td>
+<td>E</td>
+<td>W</td>
+<td>I</td>
+<td>C</td>
+<td>Z</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>E</td>
+<td>R</td>
+<td><strong>E</strong></td>
+<td><strong>C</strong></td>
+<td>E</td>
+<td>W</td>
+<td>I</td>
+<td>C</td>
+<td>Z</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Odległość wynosi 4</p></li>
+</ul>
+</section>
+<section id="odległość-lcs-ćwiczenia" class="slide level2">
+<h2>Odległość LCS (ćwiczenia)</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="countdown" id="timer_633ca1e9" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
+<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+</div>
+</div>
+<ul>
+<li>Ćwiczenie: ile wynosi odległość LCS dla następujących napisów:
+<ul>
+<li>warmińsko-mazurskie / warminskomazurskie</li>
+<li>miasto Poznań / m.Poznan</li>
+</ul></li>
+</ul>
+</section>
+<section id="lcs-przykład-w-r" class="slide level2">
+<h2>LCS (przykład w R)</h2>
+<ul>
+<li>Metoda <code>lcs</code></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb13-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"berecewicz"</span>,</span>
+<span id="cb13-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"lcs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+</div>
+</section>
+<section id="lcs-rozwiązania-ćwiczeń" class="slide level2">
+<h2>LCS (rozwiązania ćwiczeń)</h2>
+<ul>
+<li>ćwiczenie 1</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"warmińsko-mazurskie"</span>,</span>
+<span id="cb15-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"warminskomazurskie"</span>,</span>
+<span id="cb15-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"lcs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+<ul>
+<li>ćwiczenie 2</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"miasto Poznań"</span>,</span>
+<span id="cb17-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"m.Poznan"</span>,</span>
+<span id="cb17-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"lcs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9</code></pre>
+</div>
+</div>
+</section>
+<section id="odległość-levenshteina" class="slide level2">
+<h2>Odległość Levenshteina</h2>
+<ul>
+<li>Odległość Levenshteina (edycyjna) - miara odmienności napisów (skończonych ciągów znaków), zaproponowana w 1965 roku przez Władimira Lewensztejna.</li>
+<li>Formalnie jest to metryka w przestrzeni ciągów znaków, zdefiniowana następująco:
+<ul>
+<li>działaniem prostym na napisie nazwiemy:
+<ul>
+<li>wstawienie nowego znaku do napisu,</li>
+<li>usunięcie znaku z napisu,</li>
+<li>zamianę znaku w napisie na inny znak.</li>
+</ul></li>
+<li>odległością pomiędzy dwoma napisami jest najmniejsza liczba działań prostych, przeprowadzających jeden napis na drugi.</li>
+</ul></li>
+</ul>
+</section>
+<section id="odległość-levenshteina-przykład" class="slide level2">
+<h2>Odległość Levenshteina (przykład)</h2>
+<ul>
+<li><p>Przykład 1</p>
+<table class="caption-top">
+<tbody>
+<tr class="odd">
+<td>B</td>
+<td>E</td>
+<td>R</td>
+<td><strong>Ę</strong></td>
+<td><strong>S</strong></td>
+<td>E</td>
+<td>W</td>
+<td>I</td>
+<td>C</td>
+<td>Z</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>E</td>
+<td>R</td>
+<td><strong>E</strong></td>
+<td><strong>C</strong></td>
+<td>E</td>
+<td>W</td>
+<td>I</td>
+<td>C</td>
+<td>Z</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Zamiany:</p>
+<ul>
+<li>e -&gt; ę</li>
+<li>s -&gt; c</li>
+</ul></li>
+<li><p>Odległosć: 2</p></li>
+</ul>
+</section>
+<section id="odległość-levenshteina-przykład-1" class="slide level2">
+<h2>Odległość Levenshteina (przykład)</h2>
+<ul>
+<li><p>Przykład 2</p>
+<table class="caption-top" style="width:100%;">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>B</td>
+<td>E</td>
+<td>R</td>
+<td><strong>Ę</strong></td>
+<td><strong>S</strong></td>
+<td>E</td>
+<td>W</td>
+<td>I</td>
+<td>C</td>
+<td>Z</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>E</td>
+<td>R</td>
+<td><strong>E</strong></td>
+<td><strong>N</strong></td>
+<td><strong>S</strong></td>
+<td>E</td>
+<td>W</td>
+<td>I</td>
+<td>C</td>
+<td>Z</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Zamiany:</p>
+<ul>
+<li>e -&gt; ę</li>
+<li>usunięcie n</li>
+</ul></li>
+<li><p>odległość: 2</p></li>
+</ul>
+</section>
+<section id="odległosć-levenshteina-ćwiczenia" class="slide level2">
+<h2>Odległosć Levenshteina (ćwiczenia)</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="countdown" id="timer_cc602101" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
+<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+</div>
+</div>
+<ul>
+<li>Ćwiczenie: ile wynosi odległość Levenshteina dla następujących napisów:
+<ul>
+<li>warmińsko-mazurskie / warminskomazurskie</li>
+<li>miasto Poznań / m.Poznan</li>
+</ul></li>
+</ul>
+</section>
+<section id="przykład-w-r" class="slide level2">
+<h2>Przykład w R</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb19-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"berensewicz"</span>,</span>
+<span id="cb19-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"lv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+</section>
+<section id="levenshteina-rozwiązania-ćwiczeń" class="slide level2">
+<h2>Levenshteina (rozwiązania ćwiczeń)</h2>
+<ul>
+<li>ćwiczenie 1</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"warmińsko-mazurskie"</span>,</span>
+<span id="cb21-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"warminskomazurskie"</span>,</span>
+<span id="cb21-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"lv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+<ul>
+<li>ćwiczenie 2</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"miasto Poznań"</span>,</span>
+<span id="cb23-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"m.Poznan"</span>,</span>
+<span id="cb23-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"lv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7</code></pre>
+</div>
+</div>
+</section>
+<section id="optymalne-wyrównanie-ciągów" class="slide level2">
+<h2>Optymalne wyrównanie ciągów</h2>
+<ul>
+<li>ang. <em>optimal string alignment</em> (OSA; inaczej też ang. <em>restricted Damerau-Levenshtein</em> distance ale nie <em>Damerau-Levenshtein distance</em>)</li>
+<li>rozszerza odległość Levenshteina o możliwość zamiany miejscami sąsiadujących znaków</li>
+</ul>
+</section>
+<section id="osa-przykład" class="slide level2">
+<h2>OSA (przykład)</h2>
+<ul>
+<li><p>Przykład 1</p>
+<table class="caption-top">
+<tbody>
+<tr class="odd">
+<td>B</td>
+<td>E</td>
+<td>R</td>
+<td><strong>Ę</strong></td>
+<td><strong>S</strong></td>
+<td><strong>E</strong></td>
+<td>W</td>
+<td>I</td>
+<td>C</td>
+<td>Z</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>E</td>
+<td>R</td>
+<td><strong>E</strong></td>
+<td><strong>E</strong></td>
+<td><strong>S</strong></td>
+<td>W</td>
+<td>I</td>
+<td>C</td>
+<td>Z</td>
+</tr>
+</tbody>
+</table></li>
+</ul>
+</section>
+<section id="osa-ćwiczenia" class="slide level2">
+<h2>OSA (ćwiczenia)</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="countdown" id="timer_06b5ffd4" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
+<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+</div>
+</div>
+<ul>
+<li>Ćwiczenie: ile wynosi odległość OSA dla następujących napisów:
+<ul>
+<li>warmińsko-mazurskie / warminsok-mazurskie</li>
+<li>miasto Poznań / m.Opznań</li>
+</ul></li>
+</ul>
+</section>
+<section id="osa-przykład-w-r" class="slide level2">
+<h2>OSA (przykład w R)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb25-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"beręeswicz"</span>,</span>
+<span id="cb25-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"osa"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+</section>
+<section id="osa-rozwiązania-ćwiczeń" class="slide level2">
+<h2>OSA (rozwiązania ćwiczeń)</h2>
+<ul>
+<li>ćwiczenie 1</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"warmińsko-mazurskie"</span>,</span>
+<span id="cb27-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"warminsok-mazurskie"</span>,</span>
+<span id="cb27-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"osa"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+<ul>
+<li>ćwiczenie 2</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"miasto Poznań"</span>,</span>
+<span id="cb29-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"m.Opznań"</span>,</span>
+<span id="cb29-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"osa"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8</code></pre>
+</div>
+</div>
+</section>
+<section id="odległość-jaccarda" class="slide level2">
+<h2>Odległość Jaccarda</h2>
+<ul>
+<li>Indeks Jaccarda, współczynnik podobieństwa Jaccarda – statystyka używana do porównywania zbiorów.</li>
+<li>Wzór na indeks Jaccarda</li>
+</ul>
+<p><span class="math display">\[
+J(A, B)=\frac{|A \cap B|}{|A \cup B|}
+\]</span></p>
+<ul>
+<li>W przypadku porównywania tekstów mówimy relacji części wspólnej do długości</li>
+</ul>
+</section>
+<section id="odległość-jaccarda-przykład" class="slide level2">
+<h2>Odległość Jaccarda (przykład)</h2>
+<ul>
+<li><p>Przykład 1</p>
+<table class="caption-top">
+<tbody>
+<tr class="odd">
+<td>B</td>
+<td>E</td>
+<td>R</td>
+<td><strong>Ę</strong></td>
+<td><strong>S</strong></td>
+<td>E</td>
+<td>W</td>
+<td>I</td>
+<td>C</td>
+<td>Z</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>E</td>
+<td>R</td>
+<td><strong>E</strong></td>
+<td><strong>C</strong></td>
+<td>E</td>
+<td>W</td>
+<td>I</td>
+<td>C</td>
+<td>Z</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>część wspólna: 7</p></li>
+<li><p>suma unikalnych znaków: 9</p></li>
+<li><p>odległosć: 1 - 7/9 = 2/9 (<span class="math inline">\(\approx\)</span> 0.22)</p></li>
+</ul>
+</section>
+<section id="odległość-jaccarda-przykład-1" class="slide level2">
+<h2>Odległość Jaccarda (przykład)</h2>
+<ul>
+<li><p>Przykład 2</p>
+<table class="caption-top" style="width:100%;">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>B</td>
+<td>E</td>
+<td>R</td>
+<td><strong>Ę</strong></td>
+<td><strong>S</strong></td>
+<td>E</td>
+<td>W</td>
+<td>I</td>
+<td>C</td>
+<td>Z</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>E</td>
+<td>R</td>
+<td><strong>E</strong></td>
+<td><strong>N</strong></td>
+<td><strong>S</strong></td>
+<td>E</td>
+<td>W</td>
+<td>I</td>
+<td>C</td>
+<td>Z</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>część wspólna: 7</p></li>
+<li><p>suma unikalnych znaków: 10</p></li>
+<li><p>odległosć: 1 - 7/10 = 1/3</p></li>
+</ul>
+</section>
+<section id="odległość-jaccarda-ćwiczenia" class="slide level2">
+<h2>Odległość Jaccarda (ćwiczenia)</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="countdown" id="timer_0597a573" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
+<code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+</div>
+</div>
+<ul>
+<li>Ćwiczenie: ile wynosi odległość Jaccarda dla następujących napisów:
+<ul>
+<li>warmińsko-mazurskie / warminsok-mazurskie</li>
+<li>miasto poznań / m.ppznań</li>
+</ul></li>
+</ul>
+</section>
+<section id="odległość-jaccarda-przykład-w-r" class="slide level2">
+<h2>Odległość Jaccarda (przykład w R)</h2>
+<ul>
+<li>Przykład 1</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb31-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"berecewicz"</span>,</span>
+<span id="cb31-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  b e r ę s w z i c
+a 1 2 1 1 1 1 1 1 1
+b 1 3 1 0 0 1 1 1 2</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb33-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"berecewicz"</span>,</span>
+<span id="cb33-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"jaccard"</span>, </span>
+<span id="cb33-4"><a href=""></a>           <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2222222</code></pre>
+</div>
+</div>
+</section>
+<section id="odległość-jaccarda-przykład-w-r-1" class="slide level2">
+<h2>Odległość Jaccarda (przykład w R)</h2>
+<ul>
+<li>Przykład 2</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb35-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"berencewicz"</span>,</span>
+<span id="cb35-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  b e r ę s w z i n c
+a 1 2 1 1 1 1 1 1 0 1
+b 1 3 1 0 0 1 1 1 1 2</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb37-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"berencewicz"</span>,</span>
+<span id="cb37-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"jaccard"</span>, </span>
+<span id="cb37-4"><a href=""></a>           <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3</code></pre>
+</div>
+</div>
+</section>
+<section id="odległość-jaccarda-rozwiązania-ćwiczeń" class="slide level2">
+<h2>Odległość Jaccarda (rozwiązania ćwiczeń)</h2>
+<ul>
+<li>ćwiczenie 1</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"warmińsko-mazurskie"</span>,</span>
+<span id="cb39-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"warminsok-mazurskie"</span>,</span>
+<span id="cb39-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  w ń z a r s u m o n i k e -
+a 1 1 1 2 2 2 1 2 1 0 2 2 1 1
+b 1 0 1 2 2 2 1 2 1 1 2 2 1 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"warmińsko-mazurskie"</span>,</span>
+<span id="cb41-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"warminsok-mazurskie"</span>,</span>
+<span id="cb41-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"jaccard"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1428571</code></pre>
+</div>
+</div>
+</section>
+<section id="odległość-jaccarda-rozwiązania-ćwiczeń-1" class="slide level2">
+<h2>Odległość Jaccarda (rozwiązania ćwiczeń)</h2>
+<ul>
+<li>ćwiczenie 2</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"miasto poznań"</span>,</span>
+<span id="cb43-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"m.opznań"</span>,</span>
+<span id="cb43-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  m s t z ń o p n i a   .
+a 1 1 1 1 1 2 1 1 1 2 1 0
+b 1 0 0 1 1 1 1 1 0 1 0 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"miasto poznań"</span>,</span>
+<span id="cb45-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"m.opznań"</span>,</span>
+<span id="cb45-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"jaccard"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4166667</code></pre>
+</div>
+</div>
+</section>
+<section id="q-gramy" class="slide level2">
+<h2><span class="math inline">\(q\)</span>-gramy</h2>
+<ul>
+<li>często wykorzystuje się do porównań <span class="math inline">\(q\)</span>-gramy (np. 2-gramy, czasem też nazywane shingles jeżeli odnosimy się do liter),</li>
+<li>mozna użyć albo odległości Jaccarda albo <span class="math inline">\(q\)</span>-gram,</li>
+<li><span class="math inline">\(q\)</span>-gram zdefiniowana jest następująco uzyskuje się poprzez zestawienie q-gramów występujących w dwóch ciągach i zliczenie liczby q-gramów, które nie są współdzielone między nimi.</li>
+</ul>
+</section>
+<section id="q-gramy-przykład" class="slide level2">
+<h2><span class="math inline">\(q\)</span>-gramy (Przykład)</h2>
+<ul>
+<li>1-gramy: <code>{B,e,r,ę,s,e,w,i,cz}</code></li>
+<li>2-gramy: <code>{Be, er, rę, ęs, se, ew, wi, ic, cz}</code></li>
+<li>3-gramy: <code>{Ber, erę, ręs, ęse, sew, wic, ewi, icz}</code></li>
+</ul>
+</section>
+<section id="q-gramy-przykład-w-r" class="slide level2">
+<h2><span class="math inline">\(q\)</span>-gramy (Przykład w R)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href=""></a><span class="fu">qgrams</span>(<span class="st">"Beręsewicz"</span>, <span class="at">q=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   B e r ę s w z i c
+V1 1 2 1 1 1 1 1 1 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href=""></a><span class="fu">qgrams</span>(<span class="st">"Beręsewicz"</span>, <span class="at">q=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Be er rę ęs se wi ew ic cz
+V1  1  1  1  1  1  1  1  1  1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href=""></a><span class="fu">qgrams</span>(<span class="st">"eręsewicz"</span>, <span class="at">q=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   erę ręs ęse sew wic ewi icz
+V1   1   1   1   1   1   1   1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb53-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"berencewicz"</span>,</span>
+<span id="cb53-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  be er rę ęs se wi ew ic re nc cz en ce
+a  1  1  1  1  1  1  1  1  0  0  1  0  0
+b  1  1  0  0  0  1  1  1  1  1  1  1  1</code></pre>
+</div>
+</div>
+</section>
+<section id="q-gramy-przykład-w-r-1" class="slide level2">
+<h2><span class="math inline">\(q\)</span>-gramy (Przykład w R)</h2>
+<ul>
+<li>odległość Jaccarda na 1-gramach</li>
+</ul>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3</code></pre>
+</div>
+</div>
+<ul>
+<li>odległość <span class="math inline">\(q\)</span>-gram na 1-gramach</li>
+</ul>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+</div>
+</section>
+<section id="odległość-q-gram-ćwiczenia" class="slide level2">
+<h2>Odległość <span class="math inline">\(q\)</span>-gram (ćwiczenia)</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="countdown" id="timer_b0fe0006" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
+<code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+</div>
+</div>
+<ul>
+<li><p>Ćwiczenie: ile wynosi odległość <span class="math inline">\(q\)</span>-gram dla następujących napisów:</p>
+<ul>
+<li>warmińsko-mazurskie / warminsok-mazurskie</li>
+<li>miasto poznań / m.ppznań</li>
+</ul>
+<p>Wykorzystując <span class="math inline">\(q\)</span> równe 2 i 3.</p></li>
+</ul>
+</section>
+<section id="odległość-q-gram-rozwiązania-ćwiczeń" class="slide level2">
+<h2>Odległość <span class="math inline">\(q\)</span>-gram (rozwiązania ćwiczeń)</h2>
+<ul>
+<li>ćwiczenie 1</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"warmińsko-mazurskie"</span>,</span>
+<span id="cb57-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"warminsok-mazurskie"</span>,</span>
+<span id="cb57-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  wa ńs zu ar rm sk ur so rs mi o- ok ns iń ko ma ki k- az ie in -m
+a  1  1  1  1  1  2  1  0  1  1  1  0  0  1  1  1  1  0  1  1  0  1
+b  1  0  1  1  1  1  1  1  1  1  0  1  1  0  0  1  1  1  1  1  1  1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"warmińsko-mazurskie"</span>,</span>
+<span id="cb59-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"warminsok-mazurskie"</span>,</span>
+<span id="cb59-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"qgram"</span>,</span>
+<span id="cb59-4"><a href=""></a>           <span class="at">q=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10</code></pre>
+</div>
+</div>
+</section>
+<section id="odległość-q-gram-rozwiązania-ćwiczeń-1" class="slide level2">
+<h2>Odległość <span class="math inline">\(q\)</span>-gram (rozwiązania ćwiczeń)</h2>
+<ul>
+<li>ćwiczenie 2</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"miasto poznań"</span>,</span>
+<span id="cb61-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"m.ppznań"</span>,</span>
+<span id="cb61-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  mi st to zn o  po pp pz oz na ia m. as ań  p .p
+a  1  1  1  1  1  1  0  0  1  1  1  0  1  1  1  0
+b  0  0  0  1  0  0  1  1  0  1  0  1  0  1  0  1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"miasto poznań"</span>,</span>
+<span id="cb63-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"m.ppznań"</span>,</span>
+<span id="cb63-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"qgram"</span>,</span>
+<span id="cb63-4"><a href=""></a>           <span class="at">q=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 13</code></pre>
+</div>
+</div>
+</section>
+<section id="odległość-cosinusowa" class="slide level2">
+<h2>Odległość cosinusowa</h2>
+<ul>
+<li>miara odległosci (tak naprawdę kąt) między dwoma wektorami utworzonymi przez <span class="math inline">\(q\)</span>-gramy</li>
+<li>wzór:</li>
+</ul>
+<p><span class="math display">\[
+1-\frac{v_1 v_2}{||v_1||_2||v_2||_2},
+\]</span></p>
+<p>gdzie <span class="math inline">\(||.||_2\)</span> oznacza normę Euklidesową <span class="math inline">\(\sqrt{\sum_i v_{1,i}^2}\)</span>.</p>
+</section>
+<section id="odległość-cosinusowa-przykład" class="slide level2">
+<h2>Odległość cosinusowa (przykład)</h2>
+<ul>
+<li>rozważmy tylko imię: maciej i maicej i 2-gramy</li>
+<li>pierwsze: <code>{ma, ac, ci,ie,ej}</code></li>
+<li>drugie: <code>{ma, ai, ic, ce, ej}</code></li>
+<li>w zapisie wektorowym:</li>
+</ul>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>  ma ac ci ie ej ic ai ce
+a  1  1  1  1  1  0  0  0
+b  1  0  0  0  1  1  1  1</code></pre>
+</div>
+</div>
+<ul>
+<li>odległość:</li>
+</ul>
+<p><span class="math display">\[
+1- \frac{v_1 v_2}{||v_1||_2||v_2||_2} = 1 - \frac{2}{5} = 0.6.
+\]</span></p>
+</section>
+<section id="odległość-cosinusowa-przykład-w-r" class="slide level2">
+<h2>Odległość cosinusowa (przykład w R)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href=""></a><span class="fu">stringdist</span>(<span class="st">"maciej"</span>,</span>
+<span id="cb66-2"><a href=""></a>           <span class="st">"maicej"</span>,</span>
+<span id="cb66-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"cosine"</span>,</span>
+<span id="cb66-4"><a href=""></a>           <span class="at">q=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6</code></pre>
+</div>
+</div>
+</section>
+<section id="odległość-cosinowa-ćwiczenia" class="slide level2">
+<h2>Odległość cosinowa (ćwiczenia)</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="countdown" id="timer_2cb0115a" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
+<code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+</div>
+</div>
+<ul>
+<li><p>Ćwiczenie: ile wynosi odległość <span class="math inline">\(q\)</span>-gram dla następujących napisów:</p>
+<ul>
+<li>warmińsko-mazurskie / warminsok-mazurskie</li>
+<li>miasto poznań / m.ppznań</li>
+</ul>
+<p>Wykorzystując <span class="math inline">\(q\)</span> równe 2 i 3.</p></li>
+</ul>
+</section>
+<section id="odległość-cosinowa-rozwiązania-ćwiczeń" class="slide level2">
+<h2>Odległość cosinowa (rozwiązania ćwiczeń)</h2>
+<ul>
+<li>ćwiczenie 1</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"warmińsko-mazurskie"</span>,</span>
+<span id="cb68-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"warminsok-mazurskie"</span>,</span>
+<span id="cb68-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  wa ńs zu ar rm sk ur so rs mi o- ok ns iń ko ma ki k- az ie in -m
+a  1  1  1  1  1  2  1  0  1  1  1  0  0  1  1  1  1  0  1  1  0  1
+b  1  0  1  1  1  1  1  1  1  1  0  1  1  0  0  1  1  1  1  1  1  1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"warmińsko-mazurskie"</span>,</span>
+<span id="cb70-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"warminsok-mazurskie"</span>,</span>
+<span id="cb70-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"cosine"</span>,</span>
+<span id="cb70-4"><a href=""></a>           <span class="at">q=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2621352</code></pre>
+</div>
+</div>
+</section>
+<section id="odległość-cosinowa-rozwiązania-ćwiczeń-1" class="slide level2">
+<h2>Odległość cosinowa (rozwiązania ćwiczeń)</h2>
+<ul>
+<li>ćwiczenie 2</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"miasto poznań"</span>,</span>
+<span id="cb72-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"m.ppznań"</span>,</span>
+<span id="cb72-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  mi st to zn o  po pp pz oz na ia m. as ań  p .p
+a  1  1  1  1  1  1  0  0  1  1  1  0  1  1  1  0
+b  0  0  0  1  0  0  1  1  0  1  0  1  0  1  0  1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"miasto poznań"</span>,</span>
+<span id="cb74-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"m.ppznań"</span>,</span>
+<span id="cb74-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"cosine"</span>,</span>
+<span id="cb74-4"><a href=""></a>           <span class="at">q=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6726732</code></pre>
+</div>
+</div>
+</section>
+<section id="odległość-jaro" class="slide level2">
+<h2>Odległość Jaro</h2>
+<ul>
+<li>Podobieństwo Jaro między ciągami znaków a i b wyraża się następującym wzorem:</li>
+<li>Wzór</li>
+</ul>
+<p><span class="math display">\[
+\left\{\begin{array}{ll}0 &amp; \text { dla } m=0 \\ 1- \frac{1}{3}\left(\frac{m}{|a|}+\frac{m}{|b|}+\frac{m-t}{m}\right) &amp; \text { dla } m \neq 0\end{array}\right.
+\]</span> gdzie</p>
+<ul>
+<li><span class="math inline">\(m\)</span> to liczba pasujących znaków. Dwa znaki, odpowiednio z a i (b), sa uważane za pasujące tylko wtedy, gdy są takie same i są nie dalej niż</li>
+</ul>
+<p><span class="math display">\[
+\left\lfloor\frac{\max (|a|,|b|)}{2}\right\rfloor-1
+\]</span></p>
+<p>znaków od siebie, + <span class="math inline">\(t\)</span> to liczba dopasowań po transpozycji drugiego ciągu znaków, podzielona przez 2.</p>
+</section>
+<section id="odległość-jaro-przykład-w-r" class="slide level2">
+<h2>Odległość Jaro (przykład w R)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href=""></a><span class="fu">stringdist</span>(<span class="st">"maciej"</span>,</span>
+<span id="cb76-2"><a href=""></a>           <span class="st">"maicej"</span>,</span>
+<span id="cb76-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"jw"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.05555556</code></pre>
+</div>
+</div>
+</section>
+<section id="odległość-jaro-winklera" class="slide level2">
+<h2>Odległość Jaro-Winklera</h2>
+<ul>
+<li>Algorytm Winklera jest ulepszeniem algorytmu Jaro, powstałym poprzez zastosowanie pomysłów opartych na obserwacjach empirycznych, które wykazały, że mniej błędów występuje zwykle na początku błędnie zapisanych nazwisk osób</li>
+<li>Algorytm Winklera zwiększa zatem miarę podobieństwa Jaro dla identycznych znaków początkowych:</li>
+</ul>
+<p><span class="math display">\[
+d_{\mathrm{jw}}(a, b)=d_{\mathrm{jaro}}(a, b)[1-p \ell(a, b)],
+\]</span></p>
+<p>gdzie <span class="math inline">\(\ell(.)\)</span> jest długością wspólnego prefiksu na początku obu ciągów, maksymalnie wynoszącą 4, a p jest współczynnikiem skalowania (nie więcej niż 0.25)</p>
+</section>
+<section id="odległość-jaro-winklera-przykład-w-r" class="slide level2">
+<h2>Odległość Jaro-Winklera (przykład w R)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href=""></a><span class="fu">stringdist</span>(<span class="st">"maciej"</span>,</span>
+<span id="cb78-2"><a href=""></a>           <span class="st">"maicej"</span>,</span>
+<span id="cb78-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"jw"</span>,</span>
+<span id="cb78-4"><a href=""></a>           <span class="at">p =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.04444444</code></pre>
+</div>
+</div>
+</section>
+<section id="podsumowanie" class="slide level2">
+<h2>Podsumowanie</h2>
+<ul>
+<li>Ostatecznie wybór zależy od zastosowania, ale istnieją pewne ogólne rozważania.</li>
+<li>Wybór między metryką opartą na edycji lub metryką heurystyczną z jednej strony a odległością opartą na q-gramie z drugiej, jest w pewnym stopniu zależy od długości ciągu znaków.</li>
+<li>W przeciwieństwie do metryk opartych na edycji lub heurystycznych, metryki oparte na q-gramach można łatwo obliczyć między bardzo długimi ciągami tekstowymi, ponieważ liczba q-gramów napotykanych w języku w języku naturalnym (np. q ≥ 3) jest zwykle znacznie mniejsza niż q-gramy dozwolone przez alfabet.</li>
+</ul>
+</section>
+<section id="podsumowanie-1" class="slide level2">
+<h2>Podsumowanie</h2>
+<ul>
+<li>Wybór odległości opartej na edycji zależy głównie od wymaganej dokładności. Na przykład, w słowniku gdzie różnice między dopasowanymi i słownikowymi elementami są niewielkie, odległość edycji, która pozwala na więcej typów operacji edycji (takich jak optymalne wyrównanie ciągów lub odległość Damerau-Levenshtein) może dać lepsze wyniki.</li>
+<li>Heurystyczne odległości Jaro i Jaro-Winklera zostały zaprojektowane dla zostały zaprojektowane z myślą o stosunkowo krótkich ciągach znaków wpisywanych przez człowieka, więc ich obszar zastosowania jest jasny.</li>
+</ul>
+</section>
+<section id="ćwiczenie" class="slide level2">
+<h2>Ćwiczenie</h2>
+<ul>
+<li>Zapisano w pliku <code>cwiczenie01.Rmd</code>.</li>
+</ul>
+</section></section>
+<section>
+<section id="blokowanie-rekordów" class="title-slide slide level1 center" data-number="4">
+<h1><span class="header-section-number">4</span> Blokowanie rekordów</h1>
+
+</section>
+<section id="idea-blokowania-rekordów" class="slide level2">
+<h2>Idea blokowania rekordów</h2>
+<ul>
+<li>mając 3 rekordy (a, b, c) w bazie danych liczba możliwych porównań to 3 (ab, ac, bc)</li>
+<li>mając 10 rekordów mamy: 45</li>
+<li>mając 50000 rekordów mamy: 1.249975^{9}</li>
+<li>liczba kombinacji: n*(n-1)/2</li>
+<li>nie da się tego zrobić dla dużych zbiorów danych</li>
+</ul>
+</section>
+<section id="z-czego-się-korzysta" class="slide level2">
+<h2>Z czego się korzysta?</h2>
+<ul>
+<li>blokowanie wg zmiennych, które są dobrej jakości (np. rok urodzenia, płeć),</li>
+<li>blokowanie po pierwszych literach imion i nazwisk,</li>
+<li>blokowanie z wykorzystaniem kodowania fonetycznego,</li>
+<li>może się jednak zdarzyć tak, że daty urodzeń czy imiona są błędnie zapisane,</li>
+<li>wtedy warto skorzystać z wyszukiwania z wykorzystaniem (przybliżonych) najbliższych sąsiadów i grafów.</li>
+</ul>
+</section>
+<section id="przykład" class="slide level2">
+<h2>Przykład</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href=""></a>dane <span class="ot">&lt;-</span> <span class="fu">qgrams</span>(<span class="at">.list =</span> <span class="fu">list</span>(<span class="st">"maciejj"</span>, <span class="st">"majej"</span>, <span class="st">"ana"</span>, <span class="st">"annna"</span>), <span class="at">q=</span><span class="dv">2</span>)</span>
+<span id="cb80-2"><a href=""></a>dane_rej <span class="ot">&lt;-</span> <span class="fu">qgrams</span>(<span class="at">.list =</span> <span class="fu">list</span>(<span class="st">"maciej"</span>, <span class="st">"anna"</span>), <span class="at">q=</span><span class="dv">2</span>)</span>
+<span id="cb80-3"><a href=""></a>vars <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">colnames</span>(dane), <span class="fu">colnames</span>(dane_rej))</span>
+<span id="cb80-4"><a href=""></a>wysz <span class="ot">&lt;-</span> <span class="fu">nn2</span>(<span class="at">data =</span> dane[,vars], dane_rej[, vars], , <span class="at">k=</span> <span class="dv">1</span>)</span>
+<span id="cb80-5"><a href=""></a>do_grafu <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">query =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">neg =</span> <span class="fu">rep</span>(wysz<span class="sc">$</span>nn.idx[,<span class="dv">1</span>], <span class="at">each=</span><span class="dv">2</span>))</span>
+<span id="cb80-6"><a href=""></a>g1 <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(do_grafu)</span>
+<span id="cb80-7"><a href=""></a><span class="fu">plot</span>(g1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="prezentacja_files/figure-revealjs/przyklad-1.png" width="960" class="r-stretch"></section>
+<section id="blokowanie-z-wykorzystaniem-soundex" class="slide level2">
+<h2>Blokowanie z wykorzystaniem <code>SOUNDEX</code></h2>
+<p>Czym jest <code>SOUNDEX</code>?</p>
+<ul>
+<li>SOUNDEX to algorytm fonetyczny używany do indeksowania nazw na podstawie ich brzmienia.</li>
+<li><strong>Kodowanie fonetyczne</strong> – SOUNDEX przekształca słowa (szczególnie nazwiska) w czteróznakowy kod składający się z litery i trzech cyfr, grupując razem słowa brzmiące podobnie. Na przykład “Smith” i “Smyth” otrzymają ten sam kod.</li>
+<li><strong>Redukcja błędów wpisywania</strong> – Algorytm pomaga w wyszukiwaniu danych nawet gdy użytkownik popełni błąd ortograficzny lub nie jest pewien dokładnego zapisu nazwiska. Jest szczególnie przydatny w bazach danych zawierających nazwiska, gdzie występują różne warianty pisowni.</li>
+<li><strong>Standardowy system klasyfikacji</strong> - SOUNDEX przypisuje cyfry do grup spółgłosek brzmiących podobnie (np. B, F, P, V = 1; C, G, J, K, Q, S, X, Z = 2), ignoruje samogłoski i niektóre litery, tworząc ujednolicony sposób kategoryzowania nazw na podstawie ich wymowy.</li>
+</ul>
+</section>
+<section id="blokowanie-z-wykorzystaniem-soundex-1" class="slide level2">
+<h2>Blokowanie z wykorzystaniem <code>SOUNDEX</code></h2>
+<ul>
+<li><code>RecordLinkage</code> – implementuje algorytm soundex</li>
+<li><code>phonics</code> – pakiet implementuje wiele popularnych algorytmów (Howard, J. P. (2020). Phonetic spelling algorithm implementations for R. Journal of Statistical Software, 95, 1-21.)</li>
+</ul>
+</section>
+<section id="daitch-mokotoff-soundex-dla-języka-polskiego" class="slide level2">
+<h2>Daitch-Mokotoff SOUNDEX dla języka polskiego</h2>
+<p>Czym jest Daitch-Mokotoff SOUNDEX?</p>
+<ul>
+<li>Algorytm fonetyczny zaprojektowany dla nazwisk wschodnioeuropejskich</li>
+<li>Bardziej precyzyjny niż klasyczny SOUNDEX</li>
+<li>Uwzględnia specyfikę polskiej fonetyki</li>
+</ul>
+</section>
+<section id="daitch-mokotoff-soundex-dla-języka-polskiego-etap-1" class="slide level2">
+<h2>Daitch-Mokotoff SOUNDEX dla języka polskiego – etap 1</h2>
+<p>Normalizacja polskich znaków</p>
+<pre><code>Oryginalne nazwisko: "Wójcik"
+↓
+Normalizacja znaków diakrytycznych:
+Ó → U
+↓
+Wynik: "WUJCIK"</code></pre>
+<p>Przykłady normalizacji:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Oryginalny</th>
+<th>Znormalizowany</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Kowalski</td>
+<td>KOWALSKI</td>
+</tr>
+<tr class="even">
+<td>Wiśniewski</td>
+<td>WISNIEWSKI</td>
+</tr>
+<tr class="odd">
+<td>Wójcik</td>
+<td>WUJCIK</td>
+</tr>
+<tr class="even">
+<td>Dąbrowski</td>
+<td>DONBROWSKI</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="daitch-mokotoff-soundex-dla-języka-polskiego-etap-2" class="slide level2">
+<h2>Daitch-Mokotoff SOUNDEX dla języka polskiego – etap 2</h2>
+<p>Przypisanie kodów fonetycznych</p>
+<p><strong>Tablica kodowania (fragment):</strong></p>
+<ul>
+<li>Samogłoski (A,E,I,O,U) → 0</li>
+<li>B,P → 7</li>
+<li>C,K,Q → 4</li>
+<li>D,T → 3</li>
+<li>F,V,W → 8</li>
+<li>G,J → 5/1</li>
+<li>L,R → 9</li>
+<li>M,N → 6</li>
+<li>S,Z → 4</li>
+</ul>
+</section>
+<section id="daitch-mokotoff-soundex-dla-języka-polskiego-etap-2-1" class="slide level2">
+<h2>Daitch-Mokotoff SOUNDEX dla języka polskiego – etap 2</h2>
+<p>Przykład krok po kroku: “KOWALSKI”</p>
+<pre><code>K-O-W-A-L-S-K-I
+↓
+K(4) O(0) W(8) A(0) L(9) S(4) K(4) I(0)
+↓
+Pierwsza litera: K
+Kody bez powtórzeń i zer: 4-8-9-4
+↓
+Wynik: K48940</code></pre>
+</section>
+<section id="daitch-mokotoff-soundex-dla-języka-polskiego-wyniki" class="slide level2">
+<h2>Daitch-Mokotoff SOUNDEX dla języka polskiego – wyniki</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Nazwisko</th>
+<th>Kod SOUNDEX</th>
+<th>Grupa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Kowalski</td>
+<td>K48940</td>
+<td>A</td>
+</tr>
+<tr class="even">
+<td>Kowalsky</td>
+<td>K48940</td>
+<td>A</td>
+</tr>
+<tr class="odd">
+<td>Kowaliski</td>
+<td>K48940</td>
+<td>A</td>
+</tr>
+<tr class="even">
+<td>Nowak</td>
+<td>N840000</td>
+<td>B</td>
+</tr>
+<tr class="odd">
+<td>Novak</td>
+<td>N840000</td>
+<td>B</td>
+</tr>
+<tr class="even">
+<td>Wiśniewski</td>
+<td>W464800</td>
+<td>C</td>
+</tr>
+<tr class="odd">
+<td>Wisniewski</td>
+<td>W464800</td>
+<td>C</td>
+</tr>
+<tr class="even">
+<td>Wójcik</td>
+<td>W154000</td>
+<td>D</td>
+</tr>
+<tr class="odd">
+<td>Wojcik</td>
+<td>W154000</td>
+<td>D</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="daitch-mokotoff-soundex-dla-języka-polskiego-podsumowanie" class="slide level2">
+<h2>Daitch-Mokotoff SOUNDEX dla języka polskiego – podsumowanie</h2>
+<p>Praktyczne zastosowania:</p>
+<ul>
+<li><strong>Deduplikacja baz danych</strong> - identyfikacja duplikatów z błędami pisowni</li>
+<li><strong>Wyszukiwanie rozmyte</strong> - znajdowanie podobnych nazwisk</li>
+<li><strong>Łączenie rekordów</strong> - integracja danych z różnych źródeł</li>
+</ul>
+<p>Zalety dla języka polskiego:</p>
+<p>✓ Uwzględnia polskie znaki diakrytyczne<br>
+✓ Radzi sobie z typowymi błędami pisowni<br>
+✓ Skuteczny dla nazwisk słowiańskich<br>
+✓ Lepszy niż standardowy SOUNDEX dla polszczyzny</p>
+</section>
+<section id="pakiety-w-r-do-probabilistycznego-blokowania-rekordów" class="slide level2">
+<h2>Pakiety w R do probabilistycznego blokowania rekordów</h2>
+<ul>
+<li><code>klsh</code> – pakiet wykorzystuje metodę <em>Locality-sensitive hashing</em> (LSH) do redukcji wymiarów oraz analizę skupień do grupowania obiektów,</li>
+<li><code>blocking</code> – pakiet oparty na algorytmach przybliżonych najbliższych sąsiadów (Annoy, HNSW, LSH) i na razie jest w fazie rozwoju.</li>
+</ul>
+</section>
+<section id="przykład-w-r-1" class="slide level2">
+<h2>Przykład w R</h2>
+<p>Skrypt <code>soundex-polish.R</code></p>
+</section></section>
+<section>
+<section id="pakiet-reclin2" class="title-slide slide level1 center" data-number="5">
+<h1><span class="header-section-number">5</span> Pakiet <code>reclin2</code></h1>
+
+</section>
+<section id="teoria" class="slide level2">
+<h2>Teoria</h2>
+
+<img data-src="images/fspub.png" class="r-stretch quarto-figure-center"><p class="caption">Fellegi, I. P., &amp; Sunter, A. B. (1969). A theory for record linkage. Journal of the American Statistical Association, 64(328), 1183-1210.</p></section>
+<section id="czym-jest-probabilistyczne-łączenie-rekordów" class="slide level2">
+<h2>Czym jest probabilistyczne łączenie rekordów?</h2>
+<p><strong>Probabilistyczne łączenie rekordów</strong> to technika używana do łączenia rekordów, które nie posiadają unikalnych identyfikatorów.</p>
+<p>Kiedy stosujemy?</p>
+<ul>
+<li>Brak jednoznacznego identyfikatora (np. PESEL, nr ubezpieczenia)</li>
+<li>Wykorzystujemy kombinację zmiennych indywidualnie nieunikatowych:
+<ul>
+<li>Imię i nazwisko</li>
+<li>Płeć</li>
+<li>Data urodzenia</li>
+<li>Adres</li>
+</ul></li>
+</ul>
+<p>Rodzaje łączenia:</p>
+<ul>
+<li><strong>Deduplikacja</strong> - w obrębie jednego zbioru danych</li>
+<li><strong>Łączenie</strong> - między różnymi zbiorami danych</li>
+<li><strong>Kombinowane</strong> - oba podejścia jednocześnie</li>
+</ul>
+</section>
+<section id="dlaczego-probabilistyczne" class="slide level2">
+<h2>Dlaczego “probabilistyczne”?</h2>
+<p>Opiera się na <strong>bilansie dowodów</strong> i <strong>niepewności</strong>.</p>
+<p><em>Przykład:</em> Dwa rekordy z nazwiskiem “Jan Kowalski” mogą wskazywać na tę samą osobę, ale dowód nie jest rozstrzygający – może istnieć więcej osób o tym imieniu i nazwisku.</p>
+</section>
+<section id="model-fellegi-sunter---podstawy" class="slide level2">
+<h2>Model Fellegi-Sunter - podstawy</h2>
+<p>Jak działa?</p>
+<ol type="1">
+<li><p><strong>Prawdopodobieństwo wstępne (prior)</strong> – Szansa, że dwa losowo wybrane rekordy odnoszą się do tej samej osoby</p></li>
+<li><p><strong>Porównanie rekordów</strong></p>
+<ul>
+<li>✅ <strong>Zgodność</strong> → zwiększa prawdopodobieństwo dopasowania</li>
+<li>❌ <strong>Różnice</strong> → zmniejsza prawdopodobieństwo dopasowania</li>
+</ul></li>
+<li><p><strong>Wagi częściowych dopasowań (partial_match_weights)</strong></p>
+<ul>
+<li>Określają, o ile zwiększyć/zmniejszyć prawdopodobieństwo</li>
+<li>Różne pola mają różną wagę</li>
+</ul></li>
+</ol>
+</section>
+<section id="model-fellegi-sunter---podstawy-1" class="slide level2">
+<h2>Model Fellegi-Sunter - podstawy</h2>
+<p>Przykład wag:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Pole</th>
+<th>Waga dopasowania</th>
+<th>Uzasadnienie</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Kod pocztowy</td>
+<td>Wysoka</td>
+<td>Rzadko się powtarza</td>
+</tr>
+<tr class="even">
+<td>Płeć</td>
+<td>Niska</td>
+<td>Tylko dwie opcje (50% szans)</td>
+</tr>
+<tr class="odd">
+<td>Data urodzenia</td>
+<td>Wysoka</td>
+<td>Bardzo specyficzna</td>
+</tr>
+<tr class="even">
+<td>Imię “Anna”</td>
+<td>Średnia</td>
+<td>Popularne, ale nie powszechne</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="model-fellegi-sunter-obliczanie-końcowego-prawdopodobieństwa" class="slide level2">
+<h2>Model Fellegi-Sunter: obliczanie końcowego prawdopodobieństwa</h2>
+<p>Proces obliczeniowy:</p>
+<pre><code>Prawdopodobieństwo wstępne
+    ↓
++ Suma wag częściowych dopasowań
+    ↓
+= Końcowa waga dopasowania
+    ↓
+Konwersja na prawdopodobieństwo (0-100%)</code></pre>
+</section>
+<section id="model-fellegi-sunter-przykład-bardzo-uproszczony" class="slide level2">
+<h2>Model Fellegi-Sunter: przykład (bardzo uproszczony)</h2>
+<p><strong>Porównywane rekordy:</strong></p>
+<ul>
+<li>Rekord A: Jan Kowalski, M, 1985-03-15, 00-001 Warszawa</li>
+<li>Rekord B: Jan Kowalski, M, 1985-03-15, 00-001 Warszawa</li>
+</ul>
+<p><strong>Obliczenie:</strong></p>
+<ul>
+<li>Prior: 0.1% (1 na 1000)</li>
+<li>Imię i nazwisko: +2.5 punktu</li>
+<li>Płeć: +0.3 punktu</li>
+<li>Data urodzenia: +4.0 punkty</li>
+<li>Kod pocztowy: +3.2 punktu</li>
+<li><strong>Suma: +10.0 punktów → 99.8% prawdopodobieństwa</strong></li>
+</ul>
+</section>
+<section id="zalety-podejścia" class="slide level2">
+<h2>Zalety podejścia:</h2>
+<p>✓ Obiektywna ocena podobieństwa<br>
+✓ Uwzględnienie niepewności<br>
+✓ Możliwość dostrojenia do specyfiki danych<br>
+✓ Skalowalność dla dużych zbiorów danych</p>
+</section>
+<section id="przykłady-do-przeklikania" class="slide level2">
+<h2>Przykłady (do przeklikania)</h2>
+<p>https://www.robinlinacre.com/probabilistic_linkage/</p>
+</section></section>
+<section>
+<section id="model-fellegiego-suntera-konkretnie" class="title-slide slide level1 center" data-number="6">
+<h1><span class="header-section-number">6</span> Model Fellegiego-Suntera (konkretnie)</h1>
+
+</section>
+<section id="wprowadzenie-do-modelu-fellegi-sunter" class="slide level2">
+<h2>Wprowadzenie do modelu Fellegi-Sunter</h2>
+<p><strong>Cel modelu</strong></p>
+<p>Określenie prawdopodobieństwa, że dwa rekordy odnoszą się do tej samej osoby na podstawie dostępnych danych.</p>
+<p><strong>Podstawowe założenia</strong></p>
+<ul>
+<li><strong>Zbiór M</strong> - pary rekordów odnoszące się do tej samej osoby (matches)</li>
+<li><strong>Zbiór U</strong> - pary rekordów odnoszące się do różnych osób (non-matches)<br>
+</li>
+<li><strong>Zbiór A</strong> - wszystkie możliwe pary rekordów</li>
+</ul>
+<p><strong>Przykład polskich danych</strong></p>
+<pre><code>Rekord 1: Jan Kowalski, M, 1985-03-15, Warszawa
+Rekord 2: Jan Kowalski, M, 1985-03-15, Warszawa</code></pre>
+<p><strong>Pytanie:</strong> Czy to ta sama osoba?<br>
+Model Fellegi-Sunter da nam na to odpowiedź w postaci prawdopodobieństwa.</p>
+<p><strong>Wzór podstawowy</strong></p>
+<p><span class="math display">\[P(\text{match} | \gamma) = \frac{P(\gamma | M) \cdot P(M)}{P(\gamma | M) \cdot P(M) + P(\gamma | U) \cdot P(U)}\]</span></p>
+<p>gdzie <span class="math inline">\(\gamma\)</span> to wektor porównań pól.</p>
+</section>
+<section id="wyjaśnienie-ptextmatch-gamma" class="slide level2">
+<h2>Wyjaśnienie <span class="math inline">\(P(\text{match} | \gamma)\)</span></h2>
+<p>Wzór Bayesa w modelu Fellegi-Sunter</p>
+<p>Co oznaczają poszczególne elementy:</p>
+<p><strong>Lewa strona:</strong></p>
+<ul>
+<li><strong>P(match | γ)</strong> - prawdopodobieństwo dopasowania <strong>PRZY DANYM</strong> wektorze porównań γ</li>
+<li>To jest to, czego szukamy - <strong>odpowiedź modelu</strong></li>
+</ul>
+<p><strong>Licznik:</strong> - <strong>P(γ | M)</strong> - prawdopodobieństwo obserwacji wektora γ <strong>GDY</strong> para należy do M (to ta sama osoba) - <strong>P(M)</strong> - prawdopodobieństwo wstępne, że losowa para to dopasowanie</p>
+<p><strong>Mianownik:</strong> - <strong>P(γ | M) · P(M)</strong> - prawdopodobieństwo obserwacji γ gdy to dopasowanie - <strong>P(γ | U) · P(U)</strong> - prawdopodobieństwo obserwacji γ gdy to nie-dopasowanie - <strong>Suma = P(γ)</strong> - całkowite prawdopodobieństwo obserwacji γ</p>
+</section>
+<section id="wyjaśnienie-ptextmatch-gamma-1" class="slide level2">
+<h2>Wyjaśnienie <span class="math inline">\(P(\text{match} | \gamma)\)</span></h2>
+<p><strong>Wzór odpowiada na pytanie:</strong> &gt; “Mając obserwację γ, jakie jest prawdopodobieństwo, że to dopasowanie?”</p>
+<p><strong>Logika:</strong> 1. <strong>Licznik</strong> - jak prawdopodobne jest γ jeśli to dopasowanie × szansa na dopasowanie 2. <strong>Mianownik</strong> - jak prawdopodobne jest γ we wszystkich możliwych przypadkach 3. <strong>Wynik</strong> - proporcja “dowodów za” do “wszystkich dowodów”</p>
+</section>
+<section id="wyjaśnienie-ptextmatch-gamma-2" class="slide level2">
+<h2>Wyjaśnienie <span class="math inline">\(P(\text{match} | \gamma)\)</span></h2>
+<p><strong>Dane:</strong></p>
+<ul>
+<li>γ = (1,1,0) - imię i nazwisko się zgadzają, data urodzenia nie</li>
+<li>P(M) = 0.0001 (1 na 10,000)</li>
+<li>P(<span class="math inline">\(\gamma\)</span> | M) = 0.05 (5% szans na błąd w dacie dla tej samej osoby)</li>
+<li>P(<span class="math inline">\(\gamma\)</span> | U) = 0.00002 (bardzo mała szansa przypadkowej zgodności imienia i nazwiska)</li>
+</ul>
+<p><strong>Obliczenie:</strong></p>
+<p><span class="math display">\[P(\text{match} | \gamma) = \frac{0.05 \times 0.0001}{0.05 \times 0.0001 + 0.00002 \times 0.9999} = \frac{0.000005}{0.000005 + 0.000019998} = 0.2\]</span></p>
+<p><strong>Wynik: 20%</strong> – mimo zgodności imienia i nazwiska, błąd w dacie obniża prawdopodobieństwo dopasowania.</p>
+<p>Wzór <strong>równoważy</strong> dowody za dopasowaniem z dowodami przeciw, uwzględniając jak rzadkie są dopasowania w ogóle.</p>
+</section>
+<section id="definicja-wektora-porównań-gamma" class="slide level2">
+<h2>Definicja wektora porównań <span class="math inline">\(\gamma\)</span></h2>
+<p>Wektor porównań <span class="math inline">\(\gamma\)</span></p>
+<p>Dla każdego pola tworzymy funkcję porównawczą:</p>
+<p><span class="math display">\[\gamma_i = \begin{cases}
+1 &amp; \text{jeśli pola się zgadzają} \\
+0 &amp; \text{jeśli pola się różnią}
+\end{cases}\]</span></p>
+<h3 id="przykład-porównania">Przykład porównania:</h3>
+<p><strong>Dane:</strong> - <strong>Rekord A:</strong> Anna Nowak, K, 1990-05-20, 00-001 - <strong>Rekord B:</strong> Anna Nowak, K, 1990-05-20, 00-002</p>
+<p><strong>Wektor γ:</strong></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Pole</th>
+<th>Porównanie</th>
+<th>Wynik</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>γ₁ (Imię)</td>
+<td>Anna = Anna</td>
+<td><strong>1</strong></td>
+</tr>
+<tr class="even">
+<td>γ₂ (Nazwisko)</td>
+<td>Nowak = Nowak</td>
+<td><strong>1</strong></td>
+</tr>
+<tr class="odd">
+<td>γ₃ (Płeć)</td>
+<td>K = K</td>
+<td><strong>1</strong></td>
+</tr>
+<tr class="even">
+<td>γ₄ (Data ur.)</td>
+<td>1990-05-20 = 1990-05-20</td>
+<td><strong>1</strong></td>
+</tr>
+<tr class="odd">
+<td>γ₅ (Kod pocztowy)</td>
+<td>00-001 ≠ 00-002</td>
+<td><strong>0</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Wynik:</strong> γ = (1,1,1,1,0)</p>
+</section>
+<section id="parametry-m-i-u" class="slide level2">
+<h2>Parametry <span class="math inline">\(m\)</span> i <span class="math inline">\(u\)</span></h2>
+<h3 id="definicje-parametrów">Definicje parametrów:</h3>
+<ul>
+<li><p><span class="math inline">\(m_i\)</span> = P(<span class="math inline">\(\gamma_i\)</span> = 1 | para należy do M)<br>
+prawdopodobieństwo zgodności i-tego pola gdy to ta sama osoba</p></li>
+<li><p><span class="math inline">\(u_i\)</span> = P(<span class="math inline">\(\gamma_i\)</span> = 1 | para należy do U)<br>
+prawdopodobieństwo zgodności i-tego pola gdy to różne osoby</p></li>
+</ul>
+<h3 id="interpretacja">Interpretacja:</h3>
+<ul>
+<li><span class="math inline">\(m_i \approx 1\)</span> – pole rzadko ma błędy dla tej samej osoby</li>
+<li><span class="math inline">\(u_i \approx 0\)</span> – pole rzadko jest przypadkowo zgodne dla różnych osób</li>
+</ul>
+<h3 id="przykładowe-wartości-dla-polskich-danych">Przykładowe wartości dla polskich danych:</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Pole</th>
+<th><span class="math inline">\(m_i\)</span></th>
+<th><span class="math inline">\(u_i\)</span></th>
+<th>Interpretacja</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PESEL</td>
+<td>0.99</td>
+<td>0.0000001</td>
+<td>Bardzo unikalny</td>
+</tr>
+<tr class="even">
+<td>Nazwisko</td>
+<td>0.95</td>
+<td>0.002</td>
+<td>Dość unikalny</td>
+</tr>
+<tr class="odd">
+<td>Imię</td>
+<td>0.92</td>
+<td>0.008</td>
+<td>Średnio unikalny</td>
+</tr>
+<tr class="even">
+<td>Data ur.</td>
+<td>0.98</td>
+<td>0.003</td>
+<td>Bardzo unikalny</td>
+</tr>
+<tr class="odd">
+<td>Płeć</td>
+<td>0.99</td>
+<td>0.5</td>
+<td>Mało unikalny</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="wyznaczanie-wag-częściowych" class="slide level2">
+<h2>Wyznaczanie wag częściowych</h2>
+<p><strong>Gdy pola się zgadzają (<span class="math inline">\(\gamma_i = 1\)</span>):</strong></p>
+<p><span class="math display">\[w_i^{(1)} = \log_2\left(\frac{m_i}{u_i}\right)\]</span></p>
+<p><strong>Gdy pola się różnią (<span class="math inline">\(\gamma_i = 0\)</span>):</strong></p>
+<p><span class="math display">\[w_i^{(0)} = \log_2\left(\frac{1-m_i}{1-u_i}\right)\]</span></p>
+<h3 id="przykład-obliczenia-dla-imienia">Przykład obliczenia dla imienia:</h3>
+<p><strong>Dane:</strong> <span class="math inline">\(m_i\)</span> = 0.92, <span class="math inline">\(u_i\)</span> = 0.008</p>
+<p><strong>Zgodność (<span class="math inline">\(\gamma_i = 1\)</span>):</strong></p>
+<p><span class="math display">\[w_i^{(1)} = \log_2\left(\frac{0.92}{0.008}\right) = \log_2(115) = +6.85\]</span></p>
+<p><strong>Niezgodność (<span class="math inline">\(\gamma_i = 0\)</span>):</strong></p>
+<p><span class="math display">\[w_i^{(0)} = \log_2\left(\frac{1-0.92}{1-0.008}\right) = \log_2\left(\frac{0.08}{0.992}\right) = -3.63\]</span></p>
+</section>
+<section id="przykład-obliczenia-wag-dla-wszystkich-pól" class="slide level2">
+<h2>Przykład obliczenia wag dla wszystkich pól</h2>
+<h3 id="tabela-wag-dla-polskich-danych">Tabela wag dla polskich danych:</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Pole</th>
+<th><span class="math inline">\(m_i\)</span></th>
+<th><span class="math inline">\(u_i\)</span></th>
+<th><span class="math inline">\(w_i^{(1)}\)</span></th>
+<th><span class="math inline">\(w_i^{(0)}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PESEL</td>
+<td>0.99</td>
+<td>0.0000001</td>
+<td>+23.25</td>
+<td>-6.64</td>
+</tr>
+<tr class="even">
+<td>Nazwisko</td>
+<td>0.95</td>
+<td>0.002</td>
+<td>+8.89</td>
+<td>-5.31</td>
+</tr>
+<tr class="odd">
+<td>Imię</td>
+<td>0.92</td>
+<td>0.008</td>
+<td>+6.85</td>
+<td>-3.63</td>
+</tr>
+<tr class="even">
+<td>Data ur.</td>
+<td>0.98</td>
+<td>0.003</td>
+<td>+8.36</td>
+<td>-5.31</td>
+</tr>
+<tr class="odd">
+<td>Płeć</td>
+<td>0.99</td>
+<td>0.5</td>
+<td>+0.99</td>
+<td>-5.64</td>
+</tr>
+</tbody>
+</table>
+<h3 id="obserwacje">Obserwacje:</h3>
+<ul>
+<li><strong>Pola unikalne</strong> (PESEL, data ur.) mają wysokie wagi dodatnie</li>
+<li><strong>Pola powszechne</strong> (płeć) mają niskie wagi dodatnie</li>
+<li><strong>Niezgodności</strong> zawsze dają wagi ujemne</li>
+</ul>
+</section>
+<section id="prawdopodobieństwo-wstępne-prior" class="slide level2">
+<h2>Prawdopodobieństwo wstępne (prior)</h2>
+<h3 id="definicja">Definicja:</h3>
+<p><span class="math display">\[P(M) = \frac{\text{liczba oczekiwanych par dopasowanych}}{\text{łączna liczba par}}\]</span></p>
+<h3 id="przykład-obliczenia">Przykład obliczenia:</h3>
+<p><strong>Scenariusz:</strong></p>
+<p>Łączymy bazę pacjentów (10,000 osób) z bazą ubezpieczeniową (12,000 osób)</p>
+<ul>
+<li>Łączna liczba par: 10,000 × 12,000 = 120,000,000</li>
+<li>Oczekiwane dopasowania: ~9,500 (95% pacjentów ma ubezpieczenie)</li>
+<li>P(M) = 9,500 / 120,000,000 = 0.0000792</li>
+</ul>
+<h3 id="w-praktyce">W praktyce:</h3>
+<p>Większość par to nie-dopasowania, dlatego P(M) jest bardzo małe.</p>
+<h3 id="wzór-w-skali-logarytmicznej">Wzór w skali logarytmicznej:</h3>
+<p><span class="math display">\[w_0 = \log_2\left(\frac{P(M)}{P(U)}\right) = \log_2\left(\frac{P(M)}{1-P(M)}\right)\]</span></p>
+<p>Dla naszego przykładu: <span class="math inline">\(w_0 = -13.64\)</span></p>
+</section>
+<section id="kompletny-przykład---krok-po-kroku" class="slide level2">
+<h2>Kompletny przykład - krok po kroku</h2>
+<h3 id="dane-testowe">Dane testowe:</h3>
+<p><strong>Rekord A:</strong> Jan Kowalski, M, 1985-03-15, 11223344556<br>
+<strong>Rekord B:</strong> Jan Kowalski, M, 1985-03-15, 11223344556</p>
+<h3 id="krok-1-wektor-porównań">Krok 1: Wektor porównań</h3>
+<p><span class="math inline">\(\gamma = (1, 1, 1, 1, 1)\)</span> – wszystkie pola się zgadzają</p>
+<h3 id="krok-2-dobór-wag">Krok 2: Dobór wag</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Pole</th>
+<th><span class="math inline">\(\gamma_i\)</span></th>
+<th>Waga</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Imię</td>
+<td>1</td>
+<td>+6.85</td>
+</tr>
+<tr class="even">
+<td>Nazwisko</td>
+<td>1</td>
+<td>+8.89</td>
+</tr>
+<tr class="odd">
+<td>Płeć</td>
+<td>1</td>
+<td>+0.99</td>
+</tr>
+<tr class="even">
+<td>Data ur.</td>
+<td>1</td>
+<td>+8.36</td>
+</tr>
+<tr class="odd">
+<td>PESEL</td>
+<td>1</td>
+<td>+23.25</td>
+</tr>
+</tbody>
+</table>
+<h3 id="krok-3-suma-wag">Krok 3: Suma wag</h3>
+<p><span class="math display">\[W = w_0 + \sum_{i=1}^{5} w_i = -13.64 + 6.85 + 8.89 + 0.99 + 8.36 + 23.25 = +34.70\]</span></p>
+</section>
+<section id="konwersja-na-prawdopodobieństwo" class="slide level2">
+<h2>Konwersja na prawdopodobieństwo</h2>
+<h3 id="wzór-konwersji">Wzór konwersji:</h3>
+<p><span class="math display">\[P(\text{match}) = \frac{2^W}{1 + 2^W}\]</span></p>
+<h3 id="dla-naszego-przykładu">Dla naszego przykładu:</h3>
+<p><span class="math display">\[P(\text{match}) = \frac{2^{34.70}}{1 + 2^{34.70}} = \frac{2.79 \times 10^{10}}{1 + 2.79 \times 10^{10}} \approx 0.9999999996\]</span></p>
+<h3 id="interpretacja-1">Interpretacja:</h3>
+<p><strong>Prawdopodobieństwo = 99.99999996%</strong> - praktycznie pewność, że to ta sama osoba.</p>
+<h3 id="skala-interpretacji-przykładowa">Skala interpretacji (przykładowa)</h3>
+<ul>
+<li><strong>&gt; 95%</strong> - bardzo prawdopodobne dopasowanie</li>
+<li><strong>80-95%</strong> - prawdopodobne dopasowanie<br>
+</li>
+<li><strong>20-80%</strong> - niepewne</li>
+<li><strong>&lt; 20%</strong> - prawdopodobnie różne osoby</li>
+</ul>
+</section>
+<section id="przykład-z-częściową-niezgodnością" class="slide level2">
+<h2>Przykład z częściową niezgodnością</h2>
+<h3 id="dane-testowe-1">Dane testowe:</h3>
+<p><strong>Rekord A:</strong> Anna Nowak, K, 1990-05-20, Warszawa<br>
+<strong>Rekord B:</strong> Ania Nowak, K, 1990-05-20, Kraków</p>
+<h3 id="krok-1-wektor-porównań-1">Krok 1: Wektor porównań</h3>
+<p><span class="math inline">\(\gamma = (0, 1, 1, 1, 0)\)</span> – imię i miasto się różnią</p>
+<h3 id="krok-2-dobór-wag-1">Krok 2: Dobór wag</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Pole</th>
+<th><span class="math inline">\(\gamma_i\)</span></th>
+<th>Waga</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Imię</td>
+<td>0</td>
+<td>-3.63</td>
+</tr>
+<tr class="even">
+<td>Nazwisko</td>
+<td>1</td>
+<td>+8.89</td>
+</tr>
+<tr class="odd">
+<td>Płeć</td>
+<td>1</td>
+<td>+0.99</td>
+</tr>
+<tr class="even">
+<td>Data ur.</td>
+<td>1</td>
+<td>+8.36</td>
+</tr>
+<tr class="odd">
+<td>Miasto</td>
+<td>0</td>
+<td>-2.15</td>
+</tr>
+</tbody>
+</table>
+<h3 id="krok-3-obliczenia">Krok 3: Obliczenia</h3>
+<p><span class="math display">\[W = -13.64 + (-3.63) + 8.89 + 0.99 + 8.36 + (-2.15) = -1.18\]</span></p>
+<p><span class="math display">\[P(\text{match}) = \frac{2^{-1.18}}{1 + 2^{-1.18}} = \frac{0.442}{1.442} = 0.307\]</span></p>
+<p><strong>Wynik: 30.7%</strong> - prawdopodobnie różne osoby, ale wymaga weryfikacji.</p>
+</section>
+<section id="przykłady" class="slide level2">
+<h2>Przykłady</h2>
+<p>Przykłady do samodzielnego rozwiązania są w pliku <code>skrypty/fs-zadania.md</code></p>
+</section>
+<section id="pakiety-w-r-do-record-linkage" class="slide level2">
+<h2>Pakiety w R do record linkage</h2>
+<ul>
+<li><code>RecordLinkage</code> – pierwszy pakiet do record linkage i deduplikacji w R (Sariyar, M., &amp; Borg, A. (2010). The RecordLinkage Package: Detecting Errors in Data. R Journal, 2(2), 61.)</li>
+<li><code>fastLink</code> – pakiet implementujacy algorytm Fellegiego i Suntera uwzględniający informacje dodatkowe (Using a Probabilistic Model to Assist Merging of Large-scale Administrative Records)</li>
+<li><code>reclin2</code> – pakiet implementujacy PRL (van der Laan, D. J. (2022). reclin2: a Toolkit for Record Linkage and Deduplication. R Journal, 14(2).)</li>
+</ul>
+<p>Przejdzmy do pakietu <code>reclin2</code></p>
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="prezentacja_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="prezentacja_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="prezentacja_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="prezentacja_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="prezentacja_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="prezentacja_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="prezentacja_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="prezentacja_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="prezentacja_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="prezentacja_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1600,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

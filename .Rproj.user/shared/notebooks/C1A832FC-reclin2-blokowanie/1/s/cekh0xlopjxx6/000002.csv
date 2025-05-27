@@ -1,0 +1,9 @@
+"0","```r
+pary_wiecej <- pair_blocking(x = dane1, y = dane2, on = c(\"plec\", \"dataur\"))
+pary_wiecej
+```"
+"1","  First data set:  6 records
+  Second data set: 6 records
+  Total number of pairs: 11 pairs
+  Blocking on: 'plec', 'dataur'
+"

@@ -1,0 +1,4 @@
+"0","```r
+dane1 <- read.csv(\"dane/zbior3a.csv\")
+dane2 <- read.csv(\"dane/zbior3b.csv\")
+```"

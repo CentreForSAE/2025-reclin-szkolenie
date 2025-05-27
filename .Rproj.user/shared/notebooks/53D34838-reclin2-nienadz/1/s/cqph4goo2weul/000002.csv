@@ -1,0 +1,9 @@
+"0","```r
+pary_comp <- compare_pairs(pairs = pary,
+                           on = c(\"imie\", \"imie2\", \"nazwisko\", \"adres\"))
+print(pary_comp)
+```"
+"1","  First data set:  6 records
+  Second data set: 6 records
+  Total number of pairs: 36 pairs
+"

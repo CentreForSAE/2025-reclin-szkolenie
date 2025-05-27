@@ -1,0 +1,8 @@
+"0","```r
+pary <- pair(dane1,dane2)
+pary
+```"
+"1","  First data set:  6 records
+  Second data set: 6 records
+  Total number of pairs: 36 pairs
+"

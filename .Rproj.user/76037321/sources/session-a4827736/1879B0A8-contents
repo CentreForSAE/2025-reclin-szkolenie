@@ -1,0 +1,1384 @@
+---
+title: "Probabilisyczne łączenie rekordów"
+author: "Maciej Beręsewicz (Urząd Statystyczny w Poznaniu)"
+format: 
+  revealjs:
+      number-sections: true
+      number-depth: 1
+      width: 1600
+      heigth: 900
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(countdown)
+library(stringdist)
+library(igraph)
+library(RANN)
+```
+
+# Początek
+
+## Oczekiwania dot. szkolenia
+
+```{r}
+countdown(minutes = 7, bottom = 0)
+```
+
+Proszę wejść na stronę www.menti.com i podać kod
+
+**7379 4838**
+
+## Oczekiwania dot. szkolenia
+
+Wyniki
+
+## Doświadczenie w zakresie integracji danych
+
+```{r}
+countdown(minutes = 7, bottom = 0)
+```
+
+Proszę wejść na stronę www.menti.com i podać kod
+
+**3507 6668**
+
+## Doświadczenie w zakresie integracji danych
+
+Wyniki
+
+## Wprowadzenie
+
+1.  Wprowadzenie do łączenia danych
+2.  Procedura probabilistycznego łączenia rekordów
+3.  Porównywanie tekstów
+4.  Blokowanie rekordów do porównań
+5.  Łączenie rekordów: nienadzorowane
+6.  Łączenie rekordów: nadzorowane
+
+## Motywacja
+
+| Rejestr | Liczba cudzoziemców |
+|---------|--------------------:|
+| PESEL   |           2 004 765 |
+| ZUS     |             957 539 |
+| MF      |           1 513 129 |
+| KRUS    |              67 932 |
+| NFZ     |           2 034 434 |
+| UdSC    |             545 873 |
+
+## Motywacja
+
+| Rejestr   |     Etap1 |     Etap2 | Bez identyfikatorów |
+|-----------|----------:|----------:|--------------------:|
+| KRUS      |     4 674 |    18 317 |              42 693 |
+| MF        | 1 043 769 | 1 132 840 |             352 088 |
+| NFZ       | 1 987 884 | 1 987 891 |              42 524 |
+| ZUS       |   624 113 |   760 765 |             117 926 |
+| Wszystkie | 1 988 650 | 1 989 390 |                  -- |
+
+## Motywacja
+
+| Imie        | Imie2 | Nazwisko       | Rok urodzenia |
+|-------------|-------|----------------|---------------|
+| Miguel      | Luis  | Pereira Tinoco | 1969          |
+| Miguel Luis |       | Pereira-Tinoco | 1969          |
+| Miguel      |       | Pereira-Tinoco | 1968          |
+| Thi         | Hy    | Dao            | 1993          |
+| Dao Thi Hy  |       |                | 1993          |
+| Thi         |       | Dao            | 1992          |
+
+# Wprowdzenie do łączenia danych
+
+## Łączenie deterministyczne
+
+![Przykładowe łączenie danych po kluczach (źródło:
+<https://phpmajster.blogspot.com/2015/06/sql-aliasy-i-zaczenia-wielu-tabel-za.html>)](https://1.bp.blogspot.com/-IlS27_IERRk/VXXmC_DZHKI/AAAAAAAAIyM/WqqfjygxDYg/s1600/relacje.png){fig-align="center"}
+
+## Łączenie probabilistyczne
+
+![Przykładowe łączenie danych bez kluczy (źródło: Roszka
+(2012))](images/roszka.png){fig-align="center"}
+
+## Łączenie probabilistyczne (procedura)
+
+![Algorytm integracji danych. Źródło: Data Integration Manual
+(2006)](images/procedura.png){fig-align="center"}
+
+## Łączenie probabilistyczne (literatura)
+
+![Binette, O., & Steorts, R. C. (2022). (Almost) all of entity
+resolution. Science Advances,
+8(12)](images/literatura1.png){fig-align="center"}
+
+## Łączenie probabilistyczne (literatura)
+
+![Źródło:
+https://www.wbc.poznan.pl/publication/326096](images/roszka-dr.png){fig-align="center"}
+
+# Porównywanie napisów
+
+## Problem
+
+Jak wyznaczyć odległość między następującymi rekordami?
+
+| Imie        | Imie2 | Nazwisko    | Data urodzenia | Gmina     |
+|-------------|-------|-------------|----------------|-----------|
+| Maciej      | E     | Beręsewicz  | 1987           | Poznań    |
+| Maciej Eryk |       | Berecewicz  | 1987           | Poznań    |
+| Maciej      | Eryk  | Berensewicz | 1987           | Białystok |
+
+: Przykładowe dane
+
+## Miary odległości między napisami
+
+![Lista miar odległości między napisami (źródło:
+https://www.baeldung.com/cs/string-similarity-edit-distance)](https://www.baeldung.com/wp-content/uploads/sites/4/2020/11/sim-families1.png){fig-align="center"}
+
+## Pakiety w R do wyznaczania odległości
+
+-   pakiet `stringdist` (artykuł: Van der Loo, M. P. (2014). The
+    stringdist package for approximate string matching. *R Journal*,
+    *6*(1), 111.)
+-   pakiet `stringi` (artykuł: Gagolewski, M. (2022). stringi: Fast and
+    portable character string processing in R. *Journal of Statistical
+    Software*, *103*, 1-59.)
+-   pakiet `reclin2` (artykuł: van der Laan, D. J. (2022). reclin2: a
+    Toolkit for Record Linkage and Deduplication. *R Journal*, *14*(2).)
+
+## Miary odległości
+
+-   Zastąpienie znaku, jak w "foo" -\> "boo".
+-   Usunięcie znaku, jak w 'foo' -\> 'oo'.
+-   Wstawienie znaku, jak w 'foo' -\> 'floo'.
+-   Transpozycja dwóch sąsiadujących znaków, jak w 'foo' -\> 'ofo'.
+
+## Odległość Hamminga
+
+-   **Odległośc Hamminga** to miara odmienności dwóch ciągów o takiej
+    samej długości, wyrażająca liczbę miejsc (pozycji), na których te
+    dwa ciągi się różnią. Innymi słowy jest to najmniejsza liczba zmian
+    (operacji zastępowania elementu innym), jakie pozwalają
+    przeprowadzić jeden ciąg na drugi.
+
+-   [Uwaga]{.underline}: tylko ciągi o tej samej długości
+
+    |     |     |     |       |       |     |     |     |     |     |
+    |-----|-----|-----|-------|-------|-----|-----|-----|-----|-----|
+    | B   | E   | R   | **Ę** | **S** | E   | W   | I   | C   | Z   |
+    | B   | E   | R   | **E** | **C** | E   | W   | I   | C   | Z   |
+
+## Odległość Hamminga (ćwiczenia)
+
+```{r}
+countdown(minutes = 5, bottom = 0)
+```
+
+-   Ćwiczenie: ile wynosi odległość Hamminga dla następujących napisów:
+    -   warmińsko-mazurskie / warminsko mazurskie
+    -   miasto Poznań / miasto Poznan
+
+## Odległość Hamminga (przykład w R)
+
+-   Przykład dla równych napisów
+
+```{r hamming, echo = TRUE}
+stringdist(a = "beręsewicz",
+           b = "berecewicz",
+           method = "hamming")
+```
+
+-   Przykład dla równych napisów
+
+```{r hamming2, echo = TRUE}
+stringdist(a = "warmińsko-mazurskie",
+           b = "warminsko mazurskie",
+           method = "hamming")
+```
+
+## Odległość Hamminga (przykład w R)
+
+-   Przykład dla napisów o nierównej długości
+
+```{r hamming3, echo = TRUE}
+stringdist(a = "warmińsko-mazurskie",
+           b = "warminskomazurskie",
+           method = "hamming")
+```
+
+## Odległość Hamminga (przykład w R)
+
+-   Przykład dla równych napisów
+
+```{r hamming4, echo = TRUE}
+stringsim(a = "beręsewicz",
+          b = "berecewicz",
+          method = "hamming")
+```
+
+Wyznaczone jako
+
+$$
+1 - \frac{\text{dist}}{\text{max (długość tekstów)}}
+$$
+
+## Odległość Hamminga (przykład w R)
+
+-   Odległość między wektorem, a referencją
+
+```{r hamming5, echo = TRUE}
+stringsim(a = c("Beręsewicz", "Berencewicz", "Beręcewicz"),
+          b = "beręsewicz",
+          method = "hamming")
+```
+
+-   Odległość między wektorem, a wektorem (macierz)
+
+```{r hamming6, echo = TRUE}
+stringsimmatrix(a = c("Beręsewicz", "Berencewicz", "Beręcewicz"),
+                b = c("Beręsewicz", "Berencewicz", "Beręcewicz"),
+                method = "hamming")
+```
+
+## Najdłuższy wspólny podciąg
+
+-   ang. *Longest Common Substring* (LCS)
+
+-   Odległość LCS jest wtedy liczbą niesparowanych znaków w obu
+    łańcuchach
+
+    |     |     |     |       |       |     |     |     |     |     |
+    |-----|-----|-----|-------|-------|-----|-----|-----|-----|-----|
+    | B   | E   | R   | **Ę** | **S** | E   | W   | I   | C   | Z   |
+    | B   | E   | R   | **E** | **C** | E   | W   | I   | C   | Z   |
+
+-   Odległość wynosi 4
+
+## Odległość LCS (ćwiczenia)
+
+```{r}
+countdown(minutes = 5, bottom = 0)
+```
+
+-   Ćwiczenie: ile wynosi odległość LCS dla następujących napisów:
+    -   warmińsko-mazurskie / warminskomazurskie
+    -   miasto Poznań / m.Poznan
+
+## LCS (przykład w R)
+
+-   Metoda `lcs`
+
+```{r lcs1, echo = TRUE}
+stringdist(a = "beręsewicz",
+           b = "berecewicz",
+           method = "lcs")
+```
+
+## LCS (rozwiązania ćwiczeń)
+
+-   ćwiczenie 1
+
+```{r lcs2, echo = TRUE}
+stringdist(a = "warmińsko-mazurskie",
+           b = "warminskomazurskie",
+           method = "lcs")
+```
+
+-   ćwiczenie 2
+
+```{r lcs3, echo = TRUE}
+stringdist(a = "miasto Poznań",
+           b = "m.Poznan",
+           method = "lcs")
+```
+
+## Odległość Levenshteina
+
+-   Odległość Levenshteina (edycyjna) - miara odmienności napisów
+    (skończonych ciągów znaków), zaproponowana w 1965 roku przez
+    Władimira Lewensztejna.
+-   Formalnie jest to metryka w przestrzeni ciągów znaków, zdefiniowana
+    następująco:
+    -   działaniem prostym na napisie nazwiemy:
+        -   wstawienie nowego znaku do napisu,
+        -   usunięcie znaku z napisu,
+        -   zamianę znaku w napisie na inny znak.
+    -   odległością pomiędzy dwoma napisami jest najmniejsza liczba
+        działań prostych, przeprowadzających jeden napis na drugi.
+
+## Odległość Levenshteina (przykład)
+
+-   Przykład 1
+
+    |     |     |     |       |       |     |     |     |     |     |
+    |-----|-----|-----|-------|-------|-----|-----|-----|-----|-----|
+    | B   | E   | R   | **Ę** | **S** | E   | W   | I   | C   | Z   |
+    | B   | E   | R   | **E** | **C** | E   | W   | I   | C   | Z   |
+
+-   Zamiany:
+
+    -   e -\> ę
+    -   s -\> c
+
+-   Odległosć: 2
+
+## Odległość Levenshteina (przykład)
+
+-   Przykład 2
+
+    |     |     |     |       |       |       |     |     |     |     |     |
+    |-----|-----|-----|-------|-------|-------|-----|-----|-----|-----|-----|
+    | B   | E   | R   | **Ę** | **S** | E     | W   | I   | C   | Z   |     |
+    | B   | E   | R   | **E** | **N** | **S** | E   | W   | I   | C   | Z   |
+
+-   Zamiany:
+
+    -   e -\> ę
+    -   usunięcie n
+
+-   odległość: 2
+
+## Odległosć Levenshteina (ćwiczenia)
+
+```{r}
+countdown(minutes = 5, bottom = 0)
+```
+
+-   Ćwiczenie: ile wynosi odległość Levenshteina dla następujących
+    napisów:
+    -   warmińsko-mazurskie / warminskomazurskie
+    -   miasto Poznań / m.Poznan
+
+## Przykład w R
+
+```{r lv, echo = TRUE}
+stringdist(a = "beręsewicz",
+           b = "berensewicz",
+           method = "lv")
+```
+
+## Levenshteina (rozwiązania ćwiczeń)
+
+-   ćwiczenie 1
+
+```{r lv2, echo = TRUE}
+stringdist(a = "warmińsko-mazurskie",
+           b = "warminskomazurskie",
+           method = "lv")
+```
+
+-   ćwiczenie 2
+
+```{r lv3, echo = TRUE}
+stringdist(a = "miasto Poznań",
+           b = "m.Poznan",
+           method = "lv")
+```
+
+## Optymalne wyrównanie ciągów
+
+-   ang. *optimal string alignment* (OSA; inaczej też ang. *restricted
+    Damerau-Levenshtein* distance ale nie *Damerau-Levenshtein
+    distance*)
+-   rozszerza odległość Levenshteina o możliwość zamiany miejscami
+    sąsiadujących znaków
+
+## OSA (przykład)
+
+-   Przykład 1
+
+    |     |     |     |       |       |       |     |     |     |     |
+    |-----|-----|-----|-------|-------|-------|-----|-----|-----|-----|
+    | B   | E   | R   | **Ę** | **S** | **E** | W   | I   | C   | Z   |
+    | B   | E   | R   | **E** | **E** | **S** | W   | I   | C   | Z   |
+
+## OSA (ćwiczenia)
+
+```{r}
+countdown(minutes = 5, bottom = 0)
+```
+
+-   Ćwiczenie: ile wynosi odległość OSA dla następujących napisów:
+    -   warmińsko-mazurskie / warminsok-mazurskie
+    -   miasto Poznań / m.Opznań
+
+## OSA (przykład w R)
+
+```{r osa1, echo = TRUE}
+stringdist(a = "beręsewicz",
+           b = "beręeswicz",
+           method = "osa")
+```
+
+## OSA (rozwiązania ćwiczeń)
+
+-   ćwiczenie 1
+
+```{r osa2, echo = TRUE}
+stringdist(a = "warmińsko-mazurskie",
+           b = "warminsok-mazurskie",
+           method = "osa")
+```
+
+-   ćwiczenie 2
+
+```{r osa3, echo = TRUE}
+stringdist(a = "miasto Poznań",
+           b = "m.Opznań",
+           method = "osa")
+```
+
+## Odległość Jaccarda
+
+-   Indeks Jaccarda, współczynnik podobieństwa Jaccarda -- statystyka
+    używana do porównywania zbiorów.
+-   Wzór na indeks Jaccarda
+
+$$
+J(A, B)=\frac{|A \cap B|}{|A \cup B|}
+$$
+
+-   W przypadku porównywania tekstów mówimy relacji części wspólnej do
+    długości
+
+## Odległość Jaccarda (przykład)
+
+-   Przykład 1
+
+    |     |     |     |       |       |     |     |     |     |     |
+    |-----|-----|-----|-------|-------|-----|-----|-----|-----|-----|
+    | B   | E   | R   | **Ę** | **S** | E   | W   | I   | C   | Z   |
+    | B   | E   | R   | **E** | **C** | E   | W   | I   | C   | Z   |
+
+-   część wspólna: 7
+
+-   suma unikalnych znaków: 9
+
+-   odległosć: 1 - 7/9 = 2/9 ($\approx$ 0.22)
+
+## Odległość Jaccarda (przykład)
+
+-   Przykład 2
+
+    |     |     |     |       |       |       |     |     |     |     |     |
+    |-----|-----|-----|-------|-------|-------|-----|-----|-----|-----|-----|
+    | B   | E   | R   | **Ę** | **S** | E     | W   | I   | C   | Z   |     |
+    | B   | E   | R   | **E** | **N** | **S** | E   | W   | I   | C   | Z   |
+
+-   część wspólna: 7
+
+-   suma unikalnych znaków: 10
+
+-   odległosć: 1 - 7/10 = 1/3
+
+## Odległość Jaccarda (ćwiczenia)
+
+```{r}
+countdown(minutes = 10, bottom = 0)
+```
+
+-   Ćwiczenie: ile wynosi odległość Jaccarda dla następujących napisów:
+    -   warmińsko-mazurskie / warminsok-mazurskie
+    -   miasto poznań / m.ppznań
+
+## Odległość Jaccarda (przykład w R)
+
+-   Przykład 1
+
+```{r jacc1a, echo=TRUE}
+qgrams(a = "beręsewicz",
+       b = "berecewicz",
+       q = 1)
+```
+
+```{r jacc1b, echo=TRUE}
+stringdist(a = "beręsewicz",
+           b = "berecewicz",
+           method = "jaccard", 
+           q = 1)
+```
+
+## Odległość Jaccarda (przykład w R)
+
+-   Przykład 2
+
+```{r jacc2a, echo=TRUE}
+qgrams(a = "beręsewicz",
+       b = "berencewicz",
+       q = 1)
+```
+
+```{r jacc2b, echo=TRUE}
+stringdist(a = "beręsewicz",
+           b = "berencewicz",
+           method = "jaccard", 
+           q = 1)
+```
+
+## Odległość Jaccarda (rozwiązania ćwiczeń)
+
+-   ćwiczenie 1
+
+```{r jacc3a, echo = TRUE}
+qgrams(a = "warmińsko-mazurskie",
+       b = "warminsok-mazurskie",
+       q = 1)
+```
+
+```{r jacc3b, echo = TRUE}
+stringdist(a = "warmińsko-mazurskie",
+           b = "warminsok-mazurskie",
+           method = "jaccard")
+```
+
+## Odległość Jaccarda (rozwiązania ćwiczeń)
+
+-   ćwiczenie 2
+
+```{r jacc4a, echo = TRUE}
+qgrams(a = "miasto poznań",
+       b = "m.opznań",
+       q = 1)
+```
+
+```{r jacc4b, echo = TRUE}
+stringdist(a = "miasto poznań",
+           b = "m.opznań",
+           method = "jaccard")
+```
+
+## $q$-gramy
+
+-   często wykorzystuje się do porównań $q$-gramy (np. 2-gramy, czasem
+    też nazywane shingles jeżeli odnosimy się do liter),
+-   mozna użyć albo odległości Jaccarda albo $q$-gram,
+-   $q$-gram zdefiniowana jest następująco uzyskuje się poprzez
+    zestawienie q-gramów występujących w dwóch ciągach i zliczenie
+    liczby q-gramów, które nie są współdzielone między nimi.
+
+## $q$-gramy (Przykład)
+
+-   1-gramy: `{B,e,r,ę,s,e,w,i,cz}`
+-   2-gramy: `{Be, er, rę, ęs, se, ew, wi, ic, cz}`
+-   3-gramy: `{Ber, erę, ręs, ęse, sew, wic, ewi, icz}`
+
+## $q$-gramy (Przykład w R)
+
+```{r qgrams1a, echo = TRUE}
+qgrams("Beręsewicz", q=1)
+qgrams("Beręsewicz", q=2)
+qgrams("eręsewicz", q=3)
+```
+
+```{r qgrams1b, echo = TRUE}
+qgrams(a = "beręsewicz",
+       b = "berencewicz",
+       q = 2)
+```
+
+## $q$-gramy (Przykład w R)
+
+-   odległość Jaccarda na 1-gramach
+
+```{r jac-qgram1}
+stringdist(a = "beręsewicz",
+           b = "berencewicz",
+           method = "jaccard", 
+           q = 1)
+```
+
+-   odległość $q$-gram na 1-gramach
+
+```{r jac-qgram2}
+stringdist(a = "beręsewicz",
+           b = "berencewicz",
+           method = "qgram", 
+           q = 1)
+```
+
+## Odległość $q$-gram (ćwiczenia)
+
+```{r}
+countdown(minutes = 10, bottom = 0)
+```
+
+-   Ćwiczenie: ile wynosi odległość $q$-gram dla następujących napisów:
+
+    -   warmińsko-mazurskie / warminsok-mazurskie
+    -   miasto poznań / m.ppznań
+
+    Wykorzystując $q$ równe 2 i 3.
+
+## Odległość $q$-gram (rozwiązania ćwiczeń)
+
+-   ćwiczenie 1
+
+```{r q1, echo = TRUE}
+qgrams(a = "warmińsko-mazurskie",
+       b = "warminsok-mazurskie",
+       q = 2)
+```
+
+```{r q2, echo = TRUE}
+stringdist(a = "warmińsko-mazurskie",
+           b = "warminsok-mazurskie",
+           method = "qgram",
+           q=2)
+```
+
+## Odległość $q$-gram (rozwiązania ćwiczeń)
+
+-   ćwiczenie 2
+
+```{r q3, echo = TRUE}
+qgrams(a = "miasto poznań",
+       b = "m.ppznań",
+       q = 2)
+```
+
+```{r q4, echo = TRUE}
+stringdist(a = "miasto poznań",
+           b = "m.ppznań",
+           method = "qgram",
+           q=2)
+```
+
+## Odległość cosinusowa
+
+-   miara odległosci (tak naprawdę kąt) między dwoma wektorami
+    utworzonymi przez $q$-gramy
+-   wzór:
+
+$$
+1-\frac{v_1 v_2}{||v_1||_2||v_2||_2},
+$$
+
+gdzie $||.||_2$ oznacza normę Euklidesową $\sqrt{\sum_i v_{1,i}^2}$.
+
+## Odległość cosinusowa (przykład)
+
+-   rozważmy tylko imię: maciej i maicej i 2-gramy
+-   pierwsze: `{ma, ac, ci,ie,ej}`
+-   drugie: `{ma, ai, ic, ce, ej}`
+-   w zapisie wektorowym:
+
+```{r}
+res <- qgrams(a= "maciej", b="maicej", q=2)
+v1 <- res[1, ]
+v2 <- res[2, ]
+licznik <- sum(v1*v2)
+mianownik <- sqrt(sum(v1^2))*sqrt(sum(v2^2))
+res
+```
+
+-   odległość:
+
+$$
+1- \frac{v_1 v_2}{||v_1||_2||v_2||_2} = 1 - \frac{`r licznik`}{`r mianownik`} = `r 1-licznik/mianownik`.
+$$
+
+## Odległość cosinusowa (przykład w R)
+
+```{r cos1, echo = TRUE}
+stringdist("maciej",
+           "maicej",
+           method = "cosine",
+           q=2)
+```
+
+## Odległość cosinowa (ćwiczenia)
+
+```{r}
+countdown(minutes = 10, bottom = 0)
+```
+
+-   Ćwiczenie: ile wynosi odległość $q$-gram dla następujących napisów:
+
+    -   warmińsko-mazurskie / warminsok-mazurskie
+    -   miasto poznań / m.ppznań
+
+    Wykorzystując $q$ równe 2 i 3.
+
+## Odległość cosinowa (rozwiązania ćwiczeń)
+
+-   ćwiczenie 1
+
+```{r c1, echo = TRUE}
+qgrams(a = "warmińsko-mazurskie",
+       b = "warminsok-mazurskie",
+       q = 2)
+```
+
+```{r c2, echo = TRUE}
+stringdist(a = "warmińsko-mazurskie",
+           b = "warminsok-mazurskie",
+           method = "cosine",
+           q=2)
+```
+
+## Odległość cosinowa (rozwiązania ćwiczeń)
+
+-   ćwiczenie 2
+
+```{r c3, echo = TRUE}
+qgrams(a = "miasto poznań",
+       b = "m.ppznań",
+       q = 2)
+```
+
+```{r c4, echo = TRUE}
+stringdist(a = "miasto poznań",
+           b = "m.ppznań",
+           method = "cosine",
+           q=2)
+```
+
+## Odległość Jaro
+
+-   Podobieństwo Jaro między ciągami znaków a i b wyraża się
+    następującym wzorem:
+-   Wzór
+
+$$
+\left\{\begin{array}{ll}0 & \text { dla } m=0 \\ 1- \frac{1}{3}\left(\frac{m}{|a|}+\frac{m}{|b|}+\frac{m-t}{m}\right) & \text { dla } m \neq 0\end{array}\right.
+$$ gdzie
+
+-   $m$ to liczba pasujących znaków. Dwa znaki, odpowiednio z a i (b),
+    sa uważane za pasujące tylko wtedy, gdy są takie same i są nie dalej
+    niż
+
+$$
+\left\lfloor\frac{\max (|a|,|b|)}{2}\right\rfloor-1
+$$
+
+znaków od siebie, + $t$ to liczba dopasowań po transpozycji drugiego
+ciągu znaków, podzielona przez 2.
+
+## Odległość Jaro (przykład w R)
+
+```{r ja, echo = TRUE}
+stringdist("maciej",
+           "maicej",
+           method = "jw")
+```
+
+## Odległość Jaro-Winklera
+
+-   Algorytm Winklera jest ulepszeniem algorytmu Jaro, powstałym poprzez
+    zastosowanie pomysłów opartych na obserwacjach empirycznych, które
+    wykazały, że mniej błędów występuje zwykle na początku błędnie
+    zapisanych nazwisk osób
+-   Algorytm Winklera zwiększa zatem miarę podobieństwa Jaro dla
+    identycznych znaków początkowych:
+
+$$
+d_{\mathrm{jw}}(a, b)=d_{\mathrm{jaro}}(a, b)[1-p \ell(a, b)],
+$$
+
+gdzie $\ell(.)$ jest długością wspólnego prefiksu na początku obu
+ciągów, maksymalnie wynoszącą 4, a p jest współczynnikiem skalowania
+(nie więcej niż 0.25)
+
+## Odległość Jaro-Winklera (przykład w R)
+
+```{r jw, echo = TRUE}
+stringdist("maciej",
+           "maicej",
+           method = "jw",
+           p = 0.1)
+```
+
+## Podsumowanie
+
+-   Ostatecznie wybór zależy od zastosowania, ale istnieją pewne ogólne
+    rozważania.
+-   Wybór między metryką opartą na edycji lub metryką heurystyczną z
+    jednej strony a odległością opartą na q-gramie z drugiej, jest w
+    pewnym stopniu zależy od długości ciągu znaków.
+-   W przeciwieństwie do metryk opartych na edycji lub heurystycznych,
+    metryki oparte na q-gramach można łatwo obliczyć między bardzo
+    długimi ciągami tekstowymi, ponieważ liczba q-gramów napotykanych w
+    języku w języku naturalnym (np. q ≥ 3) jest zwykle znacznie mniejsza
+    niż q-gramy dozwolone przez alfabet.
+
+## Podsumowanie
+
+-   Wybór odległości opartej na edycji zależy głównie od wymaganej
+    dokładności. Na przykład, w słowniku gdzie różnice między
+    dopasowanymi i słownikowymi elementami są niewielkie, odległość
+    edycji, która pozwala na więcej typów operacji edycji (takich jak
+    optymalne wyrównanie ciągów lub odległość Damerau-Levenshtein) może
+    dać lepsze wyniki.
+-   Heurystyczne odległości Jaro i Jaro-Winklera zostały zaprojektowane
+    dla zostały zaprojektowane z myślą o stosunkowo krótkich ciągach
+    znaków wpisywanych przez człowieka, więc ich obszar zastosowania
+    jest jasny.
+
+## Ćwiczenie
+
+-   Zapisano w pliku `cwiczenie01.Rmd`.
+
+# Blokowanie rekordów
+
+## Idea blokowania rekordów
+
+-   mając 3 rekordy (a, b, c) w bazie danych liczba możliwych porównań
+    to 3 (ab, ac, bc)
+-   mając 10 rekordów mamy: 45
+-   mając 50000 rekordów mamy: `r choose(50000,2)`
+-   liczba kombinacji: n\*(n-1)/2
+-   nie da się tego zrobić dla dużych zbiorów danych
+
+## Z czego się korzysta?
+
+-   blokowanie wg zmiennych, które są dobrej jakości (np. rok urodzenia,
+    płeć),
+-   blokowanie po pierwszych literach imion i nazwisk,
+-   blokowanie z wykorzystaniem kodowania fonetycznego,
+-   może się jednak zdarzyć tak, że daty urodzeń czy imiona są błędnie
+    zapisane,
+-   wtedy warto skorzystać z wyszukiwania z wykorzystaniem
+    (przybliżonych) najbliższych sąsiadów i grafów.
+
+## Przykład
+
+```{r przyklad, echo=T}
+dane <- qgrams(.list = list("maciejj", "majej", "ana", "annna"), q=2)
+dane_rej <- qgrams(.list = list("maciej", "anna"), q=2)
+vars <- intersect(colnames(dane), colnames(dane_rej))
+wysz <- nn2(data = dane[,vars], dane_rej[, vars], , k= 1)
+do_grafu <- data.frame(query = 1:4, neg = rep(wysz$nn.idx[,1], each=2))
+g1 <- graph_from_data_frame(do_grafu)
+plot(g1)
+```
+
+## Blokowanie z wykorzystaniem `SOUNDEX`
+
+Czym jest `SOUNDEX`?
+
+-   SOUNDEX to algorytm fonetyczny używany do indeksowania nazw na
+    podstawie ich brzmienia.
+-   **Kodowanie fonetyczne** -- SOUNDEX przekształca słowa (szczególnie
+    nazwiska) w czteróznakowy kod składający się z litery i trzech cyfr,
+    grupując razem słowa brzmiące podobnie. Na przykład "Smith" i
+    "Smyth" otrzymają ten sam kod.
+-   **Redukcja błędów wpisywania** -- Algorytm pomaga w wyszukiwaniu
+    danych nawet gdy użytkownik popełni błąd ortograficzny lub nie jest
+    pewien dokładnego zapisu nazwiska. Jest szczególnie przydatny w
+    bazach danych zawierających nazwiska, gdzie występują różne warianty
+    pisowni.
+-   **Standardowy system klasyfikacji** - SOUNDEX przypisuje cyfry do
+    grup spółgłosek brzmiących podobnie (np. B, F, P, V = 1; C, G, J, K,
+    Q, S, X, Z = 2), ignoruje samogłoski i niektóre litery, tworząc
+    ujednolicony sposób kategoryzowania nazw na podstawie ich wymowy.
+
+## Blokowanie z wykorzystaniem `SOUNDEX`
+
+-   `RecordLinkage` -- implementuje algorytm soundex
+-   `phonics` -- pakiet implementuje wiele popularnych algorytmów
+    (Howard, J. P. (2020). Phonetic spelling algorithm implementations
+    for R. Journal of Statistical Software, 95, 1-21.)
+
+## Daitch-Mokotoff SOUNDEX dla języka polskiego
+
+Czym jest Daitch-Mokotoff SOUNDEX?
+
+-   Algorytm fonetyczny zaprojektowany dla nazwisk wschodnioeuropejskich
+-   Bardziej precyzyjny niż klasyczny SOUNDEX
+-   Uwzględnia specyfikę polskiej fonetyki
+
+## Daitch-Mokotoff SOUNDEX dla języka polskiego -- etap 1
+
+Normalizacja polskich znaków
+
+```         
+Oryginalne nazwisko: "Wójcik"
+↓
+Normalizacja znaków diakrytycznych:
+Ó → U
+↓
+Wynik: "WUJCIK"
+```
+
+Przykłady normalizacji:
+
+| Oryginalny | Znormalizowany |
+|------------|----------------|
+| Kowalski   | KOWALSKI       |
+| Wiśniewski | WISNIEWSKI     |
+| Wójcik     | WUJCIK         |
+| Dąbrowski  | DONBROWSKI     |
+
+## Daitch-Mokotoff SOUNDEX dla języka polskiego -- etap 2
+
+Przypisanie kodów fonetycznych
+
+**Tablica kodowania (fragment):**
+
+-   Samogłoski (A,E,I,O,U) → 0
+-   B,P → 7
+-   C,K,Q → 4
+-   D,T → 3
+-   F,V,W → 8
+-   G,J → 5/1
+-   L,R → 9
+-   M,N → 6
+-   S,Z → 4
+
+## Daitch-Mokotoff SOUNDEX dla języka polskiego -- etap 2
+
+Przykład krok po kroku: "KOWALSKI"
+
+```         
+K-O-W-A-L-S-K-I
+↓
+K(4) O(0) W(8) A(0) L(9) S(4) K(4) I(0)
+↓
+Pierwsza litera: K
+Kody bez powtórzeń i zer: 4-8-9-4
+↓
+Wynik: K48940
+```
+
+## Daitch-Mokotoff SOUNDEX dla języka polskiego -- wyniki
+
+| Nazwisko   | Kod SOUNDEX | Grupa |
+|------------|-------------|-------|
+| Kowalski   | K48940      | A     |
+| Kowalsky   | K48940      | A     |
+| Kowaliski  | K48940      | A     |
+| Nowak      | N840000     | B     |
+| Novak      | N840000     | B     |
+| Wiśniewski | W464800     | C     |
+| Wisniewski | W464800     | C     |
+| Wójcik     | W154000     | D     |
+| Wojcik     | W154000     | D     |
+
+## Daitch-Mokotoff SOUNDEX dla języka polskiego -- podsumowanie
+
+Praktyczne zastosowania:
+
+-   **Deduplikacja baz danych** - identyfikacja duplikatów z błędami
+    pisowni
+-   **Wyszukiwanie rozmyte** - znajdowanie podobnych nazwisk
+-   **Łączenie rekordów** - integracja danych z różnych źródeł
+
+Zalety dla języka polskiego:
+
+✓ Uwzględnia polskie znaki diakrytyczne\
+✓ Radzi sobie z typowymi błędami pisowni\
+✓ Skuteczny dla nazwisk słowiańskich\
+✓ Lepszy niż standardowy SOUNDEX dla polszczyzny
+
+## Pakiety w R do probabilistycznego blokowania rekordów
+
+-   `klsh` -- pakiet wykorzystuje metodę *Locality-sensitive hashing*
+    (LSH) do redukcji wymiarów oraz analizę skupień do grupowania
+    obiektów,
+-   `blocking` -- pakiet oparty na algorytmach przybliżonych
+    najbliższych sąsiadów (Annoy, HNSW, LSH) i na razie jest w fazie
+    rozwoju.
+
+## Przykład w R
+
+Skrypt `soundex-polish.R`
+
+# Pakiet `reclin2`
+
+## Teoria
+
+![Fellegi, I. P., & Sunter, A. B. (1969). A theory for record linkage.
+Journal of the American Statistical Association, 64(328),
+1183-1210.](images/fspub.png){fig-align="center"}
+
+## Czym jest probabilistyczne łączenie rekordów?
+
+**Probabilistyczne łączenie rekordów** to technika używana do łączenia
+rekordów, które nie posiadają unikalnych identyfikatorów.
+
+Kiedy stosujemy?
+
+-   Brak jednoznacznego identyfikatora (np. PESEL, nr ubezpieczenia)
+-   Wykorzystujemy kombinację zmiennych indywidualnie nieunikatowych:
+    -   Imię i nazwisko
+    -   Płeć
+    -   Data urodzenia
+    -   Adres
+
+Rodzaje łączenia:
+
+-   **Deduplikacja** - w obrębie jednego zbioru danych
+-   **Łączenie** - między różnymi zbiorami danych
+-   **Kombinowane** - oba podejścia jednocześnie
+
+## Dlaczego "probabilistyczne"?
+
+Opiera się na **bilansie dowodów** i **niepewności**.
+
+*Przykład:* Dwa rekordy z nazwiskiem "Jan Kowalski" mogą wskazywać na tę
+samą osobę, ale dowód nie jest rozstrzygający -- może istnieć więcej
+osób o tym imieniu i nazwisku.
+
+## Model Fellegi-Sunter - podstawy
+
+Jak działa?
+
+1.  **Prawdopodobieństwo wstępne (prior)** -- Szansa, że dwa losowo
+    wybrane rekordy odnoszą się do tej samej osoby
+
+2.  **Porównanie rekordów**
+
+    -   ✅ **Zgodność** → zwiększa prawdopodobieństwo dopasowania
+    -   ❌ **Różnice** → zmniejsza prawdopodobieństwo dopasowania
+
+3.  **Wagi częściowych dopasowań (partial_match_weights)**
+
+    -   Określają, o ile zwiększyć/zmniejszyć prawdopodobieństwo
+    -   Różne pola mają różną wagę
+
+## Model Fellegi-Sunter - podstawy
+
+Przykład wag:
+
+| Pole           | Waga dopasowania | Uzasadnienie                  |
+|----------------|------------------|-------------------------------|
+| Kod pocztowy   | Wysoka           | Rzadko się powtarza           |
+| Płeć           | Niska            | Tylko dwie opcje (50% szans)  |
+| Data urodzenia | Wysoka           | Bardzo specyficzna            |
+| Imię "Anna"    | Średnia          | Popularne, ale nie powszechne |
+
+## Model Fellegi-Sunter: obliczanie końcowego prawdopodobieństwa
+
+Proces obliczeniowy:
+
+```         
+Prawdopodobieństwo wstępne
+    ↓
++ Suma wag częściowych dopasowań
+    ↓
+= Końcowa waga dopasowania
+    ↓
+Konwersja na prawdopodobieństwo (0-100%)
+```
+
+## Model Fellegi-Sunter: przykład (bardzo uproszczony)
+
+**Porównywane rekordy:** 
+
+- Rekord A: Jan Kowalski, M, 1985-03-15, 00-001 Warszawa 
+- Rekord B: Jan Kowalski, M, 1985-03-15, 00-001 Warszawa
+
+**Obliczenie:** 
+
+- Prior: 0.1% (1 na 1000) 
+- Imię i nazwisko: +2.5 punktu 
+- Płeć: +0.3 punktu
+- Data urodzenia: +4.0 punkty 
+- Kod pocztowy: +3.2 punktu 
+- **Suma: +10.0 punktów → 99.8% prawdopodobieństwa**
+
+## Zalety podejścia:
+
+✓ Obiektywna ocena podobieństwa\
+✓ Uwzględnienie niepewności\
+✓ Możliwość dostrojenia do specyfiki danych\
+✓ Skalowalność dla dużych zbiorów danych
+
+
+## Przykłady (do przeklikania)
+
+https://www.robinlinacre.com/probabilistic_linkage/
+
+# Model Fellegiego-Suntera (konkretnie)
+
+## Wprowadzenie do modelu Fellegi-Sunter
+
+**Cel modelu**
+
+Określenie prawdopodobieństwa, że dwa rekordy odnoszą się do tej samej osoby na podstawie dostępnych danych.
+
+**Podstawowe założenia**
+
+- **Zbiór M** - pary rekordów odnoszące się do tej samej osoby (matches)
+- **Zbiór U** - pary rekordów odnoszące się do różnych osób (non-matches)  
+- **Zbiór A** - wszystkie możliwe pary rekordów
+
+**Przykład polskich danych**
+
+```
+Rekord 1: Jan Kowalski, M, 1985-03-15, Warszawa
+Rekord 2: Jan Kowalski, M, 1985-03-15, Warszawa
+```
+
+**Pytanie:** Czy to ta sama osoba?  
+Model Fellegi-Sunter da nam na to odpowiedź w postaci prawdopodobieństwa.
+
+**Wzór podstawowy**
+
+$$P(\text{match} | \gamma) = \frac{P(\gamma | M) \cdot P(M)}{P(\gamma | M) \cdot P(M) + P(\gamma | U) \cdot P(U)}$$
+
+gdzie $\gamma$ to wektor porównań pól.
+
+## Wyjaśnienie $P(\text{match} | \gamma)$
+
+Wzór Bayesa w modelu Fellegi-Sunter
+
+Co oznaczają poszczególne elementy:
+
+**Lewa strona:**
+
+- **P(match | γ)** - prawdopodobieństwo dopasowania **PRZY DANYM** wektorze porównań γ
+- To jest to, czego szukamy - **odpowiedź modelu**
+
+**Licznik:**
+- **P(γ | M)** - prawdopodobieństwo obserwacji wektora γ **GDY** para należy do M (to ta sama osoba)
+- **P(M)** - prawdopodobieństwo wstępne, że losowa para to dopasowanie
+
+**Mianownik:**
+- **P(γ | M) · P(M)** - prawdopodobieństwo obserwacji γ gdy to dopasowanie
+- **P(γ | U) · P(U)** - prawdopodobieństwo obserwacji γ gdy to nie-dopasowanie
+- **Suma = P(γ)** - całkowite prawdopodobieństwo obserwacji γ
+
+## Wyjaśnienie $P(\text{match} | \gamma)$ 
+
+**Wzór odpowiada na pytanie:**
+> "Mając obserwację γ, jakie jest prawdopodobieństwo, że to dopasowanie?"
+
+**Logika:**
+1. **Licznik** - jak prawdopodobne jest γ jeśli to dopasowanie × szansa na dopasowanie
+2. **Mianownik** - jak prawdopodobne jest γ we wszystkich możliwych przypadkach
+3. **Wynik** - proporcja "dowodów za" do "wszystkich dowodów"
+
+## Wyjaśnienie $P(\text{match} | \gamma)$ 
+
+**Dane:**
+
+- γ = (1,1,0) - imię i nazwisko się zgadzają, data urodzenia nie
+- P(M) = 0.0001 (1 na 10,000)
+- P($\gamma$ | M) = 0.05 (5% szans na błąd w dacie dla tej samej osoby)
+- P($\gamma$ | U) = 0.00002 (bardzo mała szansa przypadkowej zgodności imienia i nazwiska)
+
+**Obliczenie:**
+
+$$P(\text{match} | \gamma) = \frac{0.05 \times 0.0001}{0.05 \times 0.0001 + 0.00002 \times 0.9999} = \frac{0.000005}{0.000005 + 0.000019998} = 0.2$$
+
+**Wynik: 20%** -- mimo zgodności imienia i nazwiska, błąd w dacie obniża prawdopodobieństwo dopasowania.
+
+Wzór **równoważy** dowody za dopasowaniem z dowodami przeciw, uwzględniając jak rzadkie są dopasowania w ogóle.
+
+## Definicja wektora porównań $\gamma$
+
+Wektor porównań $\gamma$
+
+Dla każdego pola tworzymy funkcję porównawczą:
+
+$$\gamma_i = \begin{cases} 
+1 & \text{jeśli pola się zgadzają} \\
+0 & \text{jeśli pola się różnią}
+\end{cases}$$
+
+### Przykład porównania:
+
+**Dane:**
+- **Rekord A:** Anna Nowak, K, 1990-05-20, 00-001
+- **Rekord B:** Anna Nowak, K, 1990-05-20, 00-002
+
+**Wektor γ:**
+
+| Pole | Porównanie | Wynik |
+|------|------------|-------|
+| γ₁ (Imię) | Anna = Anna | **1** |
+| γ₂ (Nazwisko) | Nowak = Nowak | **1** |
+| γ₃ (Płeć) | K = K | **1** |
+| γ₄ (Data ur.) | 1990-05-20 = 1990-05-20 | **1** |
+| γ₅ (Kod pocztowy) | 00-001 ≠ 00-002 | **0** |
+
+**Wynik:** γ = (1,1,1,1,0)
+
+## Parametry $m$ i $u$
+
+### Definicje parametrów:
+
+- $m_i$ = P($\gamma_i$ = 1 | para należy do M)  
+  prawdopodobieństwo zgodności i-tego pola gdy to ta sama osoba
+
+- $u_i$ = P($\gamma_i$ = 1 | para należy do U)  
+  prawdopodobieństwo zgodności i-tego pola gdy to różne osoby
+
+### Interpretacja:
+
+- $m_i \approx 1$ -- pole rzadko ma błędy dla tej samej osoby
+- $u_i \approx 0$ -- pole rzadko jest przypadkowo zgodne dla różnych osób
+
+### Przykładowe wartości dla polskich danych:
+
+| Pole |$m_i$ | $u_i$ | Interpretacja |
+|------|----|----|---------------|
+| PESEL | 0.99 | 0.0000001 | Bardzo unikalny |
+| Nazwisko | 0.95 | 0.002 | Dość unikalny |
+| Imię | 0.92 | 0.008 | Średnio unikalny |
+| Data ur. | 0.98 | 0.003 | Bardzo unikalny |
+| Płeć | 0.99 | 0.5 | Mało unikalny |
+
+## Wyznaczanie wag częściowych
+
+**Gdy pola się zgadzają ($\gamma_i = 1$):**
+
+$$w_i^{(1)} = \log_2\left(\frac{m_i}{u_i}\right)$$
+
+**Gdy pola się różnią ($\gamma_i = 0$):**
+
+$$w_i^{(0)} = \log_2\left(\frac{1-m_i}{1-u_i}\right)$$
+
+### Przykład obliczenia dla imienia:
+
+**Dane:** $m_i$ = 0.92, $u_i$ = 0.008
+
+**Zgodność ($\gamma_i = 1$):**
+
+$$w_i^{(1)} = \log_2\left(\frac{0.92}{0.008}\right) = \log_2(115) = +6.85$$
+
+**Niezgodność ($\gamma_i = 0$):**
+
+$$w_i^{(0)} = \log_2\left(\frac{1-0.92}{1-0.008}\right) = \log_2\left(\frac{0.08}{0.992}\right) = -3.63$$
+
+## Przykład obliczenia wag dla wszystkich pól
+
+### Tabela wag dla polskich danych:
+
+| Pole | $m_i$ | $u_i$ | $w_i^{(1)}$ | $w_i^{(0)}$ |
+|------|----|----|--------|--------|
+| PESEL | 0.99 | 0.0000001 | +23.25 | -6.64 |
+| Nazwisko | 0.95 | 0.002 | +8.89 | -5.31 |
+| Imię | 0.92 | 0.008 | +6.85 | -3.63 |
+| Data ur. | 0.98 | 0.003 | +8.36 | -5.31 |
+| Płeć | 0.99 | 0.5 | +0.99 | -5.64 |
+
+### Obserwacje:
+
+- **Pola unikalne** (PESEL, data ur.) mają wysokie wagi dodatnie
+- **Pola powszechne** (płeć) mają niskie wagi dodatnie
+- **Niezgodności** zawsze dają wagi ujemne
+
+
+## Prawdopodobieństwo wstępne (prior)
+
+### Definicja:
+
+$$P(M) = \frac{\text{liczba oczekiwanych par dopasowanych}}{\text{łączna liczba par}}$$
+
+### Przykład obliczenia:
+
+**Scenariusz:** 
+
+Łączymy bazę pacjentów (10,000 osób) z bazą ubezpieczeniową (12,000 osób)
+
+- Łączna liczba par: 10,000 × 12,000 = 120,000,000
+- Oczekiwane dopasowania: ~9,500 (95% pacjentów ma ubezpieczenie)
+- P(M) = 9,500 / 120,000,000 = 0.0000792
+
+### W praktyce:
+
+Większość par to nie-dopasowania, dlatego P(M) jest bardzo małe.
+
+### Wzór w skali logarytmicznej:
+
+$$w_0 = \log_2\left(\frac{P(M)}{P(U)}\right) = \log_2\left(\frac{P(M)}{1-P(M)}\right)$$
+
+Dla naszego przykładu: $w_0 = -13.64$
+
+
+## Kompletny przykład - krok po kroku
+
+### Dane testowe:
+
+**Rekord A:** Jan Kowalski, M, 1985-03-15, 11223344556  
+**Rekord B:** Jan Kowalski, M, 1985-03-15, 11223344556
+
+### Krok 1: Wektor porównań
+
+$\gamma = (1, 1, 1, 1, 1)$ -- wszystkie pola się zgadzają
+
+### Krok 2: Dobór wag
+
+| Pole | $\gamma_i$ | Waga |
+|------|----|----- |
+| Imię | 1 | +6.85 |
+| Nazwisko | 1 | +8.89 |
+| Płeć | 1 | +0.99 |
+| Data ur. | 1 | +8.36 |
+| PESEL | 1 | +23.25 |
+
+### Krok 3: Suma wag
+
+$$W = w_0 + \sum_{i=1}^{5} w_i = -13.64 + 6.85 + 8.89 + 0.99 + 8.36 + 23.25 = +34.70$$
+
+
+## Konwersja na prawdopodobieństwo
+
+### Wzór konwersji:
+
+$$P(\text{match}) = \frac{2^W}{1 + 2^W}$$
+
+### Dla naszego przykładu:
+
+$$P(\text{match}) = \frac{2^{34.70}}{1 + 2^{34.70}} = \frac{2.79 \times 10^{10}}{1 + 2.79 \times 10^{10}} \approx 0.9999999996$$
+
+### Interpretacja:
+
+**Prawdopodobieństwo = 99.99999996%** - praktycznie pewność, że to ta sama osoba.
+
+### Skala interpretacji (przykładowa)
+
+- **> 95%** - bardzo prawdopodobne dopasowanie
+- **80-95%** - prawdopodobne dopasowanie  
+- **20-80%** - niepewne
+- **< 20%** - prawdopodobnie różne osoby
+
+## Przykład z częściową niezgodnością
+
+### Dane testowe:
+
+**Rekord A:** Anna Nowak, K, 1990-05-20, Warszawa  
+**Rekord B:** Ania Nowak, K, 1990-05-20, Kraków
+
+### Krok 1: Wektor porównań
+
+$\gamma = (0, 1, 1, 1, 0)$ -- imię i miasto się różnią
+
+### Krok 2: Dobór wag
+
+| Pole | $\gamma_i$ | Waga |
+|------|----|----- |
+| Imię | 0 | -3.63 |
+| Nazwisko | 1 | +8.89 |
+| Płeć | 1 | +0.99 |
+| Data ur. | 1 | +8.36 |
+| Miasto | 0 | -2.15 |
+
+### Krok 3: Obliczenia
+
+$$W = -13.64 + (-3.63) + 8.89 + 0.99 + 8.36 + (-2.15) = -1.18$$
+
+$$P(\text{match}) = \frac{2^{-1.18}}{1 + 2^{-1.18}} = \frac{0.442}{1.442} = 0.307$$
+
+**Wynik: 30.7%** - prawdopodobnie różne osoby, ale wymaga weryfikacji.
+
+## Przykłady
+
+Przykłady do samodzielnego rozwiązania są w pliku `skrypty/fs-zadania.md`
+
+
+## Pakiety w R do record linkage
+
+-   `RecordLinkage` -- pierwszy pakiet do record linkage i deduplikacji
+    w R (Sariyar, M., & Borg, A. (2010). The RecordLinkage Package:
+    Detecting Errors in Data. R Journal, 2(2), 61.)
+-   `fastLink` -- pakiet implementujacy algorytm Fellegiego i Suntera
+    uwzględniający informacje dodatkowe (Using a Probabilistic Model to
+    Assist Merging of Large-scale Administrative Records)
+-   `reclin2` -- pakiet implementujacy PRL (van der Laan, D. J. (2022).
+    reclin2: a Toolkit for Record Linkage and Deduplication. R Journal,
+    14(2).)
+
+Przejdzmy do pakietu `reclin2`

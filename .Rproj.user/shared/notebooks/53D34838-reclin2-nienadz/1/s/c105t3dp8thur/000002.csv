@@ -1,0 +1,8 @@
+"0","```r
+pary_comp <- select_threshold(score_jw_prosty, \"threshold\", score = \"score\", threshold = 2)
+pary_comp
+```"
+"1","  First data set:  6 records
+  Second data set: 6 records
+  Total number of pairs: 36 pairs
+"
