@@ -214,7 +214,7 @@ Maciej Beręsewicz (Urząd Statystyczny w Poznaniu)
 <h2>Oczekiwania dot. szkolenia</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="countdown" id="timer_51905bea" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_0a940ca9" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">07</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -231,7 +231,7 @@ Maciej Beręsewicz (Urząd Statystyczny w Poznaniu)
 <h2>Doświadczenie w zakresie integracji danych</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="countdown" id="timer_4f4cdf4a" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_5aea2394" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">07</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -517,7 +517,7 @@ Maciej Beręsewicz (Urząd Statystyczny w Poznaniu)
 <h2>Odległość Hamminga (ćwiczenia)</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="countdown" id="timer_5740aa6d" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_dd1eca1d" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -656,7 +656,7 @@ Maciej Beręsewicz (Urząd Statystyczny w Poznaniu)
 <h2>Odległość LCS (ćwiczenia)</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="countdown" id="timer_aabda6a1" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_66d379f7" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -824,7 +824,7 @@ Maciej Beręsewicz (Urząd Statystyczny w Poznaniu)
 <h2>Odległosć Levenshteina (ćwiczenia)</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="countdown" id="timer_15ebae70" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_85e1fcc3" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -919,7 +919,7 @@ Maciej Beręsewicz (Urząd Statystyczny w Poznaniu)
 <h2>OSA (ćwiczenia)</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="countdown" id="timer_9f240508" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_ce55b5b3" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -966,6 +966,52 @@ Maciej Beręsewicz (Urząd Statystyczny w Poznaniu)
 <span id="cb29-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"osa"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 8</code></pre>
+</div>
+</div>
+</section>
+<section id="q-gramy" class="slide level2">
+<h2><span class="math inline">\(q\)</span>-gramy</h2>
+<ul>
+<li>często wykorzystuje się do porównań <span class="math inline">\(q\)</span>-gramy (np. 2-gramy, czasem też nazywane shingles jeżeli odnosimy się do liter),</li>
+<li>mozna użyć albo odległości Jaccarda albo <span class="math inline">\(q\)</span>-gram,</li>
+<li><span class="math inline">\(q\)</span>-gram zdefiniowana jest następująco uzyskuje się poprzez zestawienie q-gramów występujących w dwóch ciągach i zliczenie liczby q-gramów, które nie są współdzielone między nimi.</li>
+</ul>
+</section>
+<section id="q-gramy-przykład" class="slide level2">
+<h2><span class="math inline">\(q\)</span>-gramy (Przykład)</h2>
+<ul>
+<li>1-gramy: <code>{B,e,r,ę,s,e,w,i,cz}</code></li>
+<li>2-gramy: <code>{Be, er, rę, ęs, se, ew, wi, ic, cz}</code></li>
+<li>3-gramy: <code>{Ber, erę, ręs, ęse, sew, wic, ewi, icz}</code></li>
+</ul>
+</section>
+<section id="q-gramy-przykład-w-r" class="slide level2">
+<h2><span class="math inline">\(q\)</span>-gramy (Przykład w R)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a><span class="fu">qgrams</span>(<span class="st">"Beręsewicz"</span>, <span class="at">q=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   B e r ę s w z i c
+V1 1 2 1 1 1 1 1 1 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href=""></a><span class="fu">qgrams</span>(<span class="st">"Beręsewicz"</span>, <span class="at">q=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Be er rę ęs se wi ew ic cz
+V1  1  1  1  1  1  1  1  1  1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a><span class="fu">qgrams</span>(<span class="st">"eręsewicz"</span>, <span class="at">q=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   erę ręs ęse sew wic ewi icz
+V1   1   1   1   1   1   1   1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb37-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"berencewicz"</span>,</span>
+<span id="cb37-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  be er rę ęs se wi ew ic re nc cz en ce
+a  1  1  1  1  1  1  1  1  0  0  1  0  0
+b  1  1  0  0  0  1  1  1  1  1  1  1  1</code></pre>
 </div>
 </div>
 </section>
@@ -1075,7 +1121,7 @@ J(A, B)=\frac{|A \cap B|}{|A \cup B|}
 <h2>Odległość Jaccarda (ćwiczenia)</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="countdown" id="timer_2ff28bae" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_715bde78" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -1095,9 +1141,9 @@ J(A, B)=\frac{|A \cap B|}{|A \cup B|}
 <li>Przykład 1</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
-<span id="cb31-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"berecewicz"</span>,</span>
-<span id="cb31-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb39-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"berecewicz"</span>,</span>
+<span id="cb39-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  b e r ę s w z i c
 a 1 2 1 1 1 1 1 1 1
@@ -1105,10 +1151,10 @@ b 1 3 1 0 0 1 1 1 2</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
-<span id="cb33-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"berecewicz"</span>,</span>
-<span id="cb33-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"jaccard"</span>, </span>
-<span id="cb33-4"><a href=""></a>           <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb41-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"berecewicz"</span>,</span>
+<span id="cb41-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"jaccard"</span>, </span>
+<span id="cb41-4"><a href=""></a>           <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.2222222</code></pre>
 </div>
@@ -1120,9 +1166,9 @@ b 1 3 1 0 0 1 1 1 2</code></pre>
 <li>Przykład 2</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
-<span id="cb35-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"berencewicz"</span>,</span>
-<span id="cb35-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb43-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"berencewicz"</span>,</span>
+<span id="cb43-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  b e r ę s w z i n c
 a 1 2 1 1 1 1 1 1 0 1
@@ -1130,10 +1176,10 @@ b 1 3 1 0 0 1 1 1 1 2</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
-<span id="cb37-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"berencewicz"</span>,</span>
-<span id="cb37-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"jaccard"</span>, </span>
-<span id="cb37-4"><a href=""></a>           <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
+<span id="cb45-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"berencewicz"</span>,</span>
+<span id="cb45-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"jaccard"</span>, </span>
+<span id="cb45-4"><a href=""></a>           <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.3</code></pre>
 </div>
@@ -1145,9 +1191,9 @@ b 1 3 1 0 0 1 1 1 1 2</code></pre>
 <li>ćwiczenie 1</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"warmińsko-mazurskie"</span>,</span>
-<span id="cb39-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"warminsok-mazurskie"</span>,</span>
-<span id="cb39-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"warmińsko-mazurskie"</span>,</span>
+<span id="cb47-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"warminsok-mazurskie"</span>,</span>
+<span id="cb47-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  w ń z a r s u m o n i k e -
 a 1 1 1 2 2 2 1 2 1 0 2 2 1 1
@@ -1155,9 +1201,9 @@ b 1 0 1 2 2 2 1 2 1 1 2 2 1 1</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"warmińsko-mazurskie"</span>,</span>
-<span id="cb41-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"warminsok-mazurskie"</span>,</span>
-<span id="cb41-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"jaccard"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"warmińsko-mazurskie"</span>,</span>
+<span id="cb49-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"warminsok-mazurskie"</span>,</span>
+<span id="cb49-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"jaccard"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.1428571</code></pre>
 </div>
@@ -1169,9 +1215,9 @@ b 1 0 1 2 2 2 1 2 1 1 2 2 1 1</code></pre>
 <li>ćwiczenie 2</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"miasto poznań"</span>,</span>
-<span id="cb43-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"m.opznań"</span>,</span>
-<span id="cb43-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"miasto poznań"</span>,</span>
+<span id="cb51-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"m.opznań"</span>,</span>
+<span id="cb51-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  m s t z ń o p n i a   .
 a 1 1 1 1 1 2 1 1 1 2 1 0
@@ -1179,57 +1225,11 @@ b 1 0 0 1 1 1 1 1 0 1 0 1</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"miasto poznań"</span>,</span>
-<span id="cb45-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"m.opznań"</span>,</span>
-<span id="cb45-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"jaccard"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href=""></a><span class="fu">stringdist</span>(<span class="at">a =</span> <span class="st">"miasto poznań"</span>,</span>
+<span id="cb53-2"><a href=""></a>           <span class="at">b =</span> <span class="st">"m.opznań"</span>,</span>
+<span id="cb53-3"><a href=""></a>           <span class="at">method =</span> <span class="st">"jaccard"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.4166667</code></pre>
-</div>
-</div>
-</section>
-<section id="q-gramy" class="slide level2">
-<h2><span class="math inline">\(q\)</span>-gramy</h2>
-<ul>
-<li>często wykorzystuje się do porównań <span class="math inline">\(q\)</span>-gramy (np. 2-gramy, czasem też nazywane shingles jeżeli odnosimy się do liter),</li>
-<li>mozna użyć albo odległości Jaccarda albo <span class="math inline">\(q\)</span>-gram,</li>
-<li><span class="math inline">\(q\)</span>-gram zdefiniowana jest następująco uzyskuje się poprzez zestawienie q-gramów występujących w dwóch ciągach i zliczenie liczby q-gramów, które nie są współdzielone między nimi.</li>
-</ul>
-</section>
-<section id="q-gramy-przykład" class="slide level2">
-<h2><span class="math inline">\(q\)</span>-gramy (Przykład)</h2>
-<ul>
-<li>1-gramy: <code>{B,e,r,ę,s,e,w,i,cz}</code></li>
-<li>2-gramy: <code>{Be, er, rę, ęs, se, ew, wi, ic, cz}</code></li>
-<li>3-gramy: <code>{Ber, erę, ręs, ęse, sew, wic, ewi, icz}</code></li>
-</ul>
-</section>
-<section id="q-gramy-przykład-w-r" class="slide level2">
-<h2><span class="math inline">\(q\)</span>-gramy (Przykład w R)</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href=""></a><span class="fu">qgrams</span>(<span class="st">"Beręsewicz"</span>, <span class="at">q=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   B e r ę s w z i c
-V1 1 2 1 1 1 1 1 1 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href=""></a><span class="fu">qgrams</span>(<span class="st">"Beręsewicz"</span>, <span class="at">q=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   Be er rę ęs se wi ew ic cz
-V1  1  1  1  1  1  1  1  1  1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href=""></a><span class="fu">qgrams</span>(<span class="st">"eręsewicz"</span>, <span class="at">q=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   erę ręs ęse sew wic ewi icz
-V1   1   1   1   1   1   1   1</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href=""></a><span class="fu">qgrams</span>(<span class="at">a =</span> <span class="st">"beręsewicz"</span>,</span>
-<span id="cb53-2"><a href=""></a>       <span class="at">b =</span> <span class="st">"berencewicz"</span>,</span>
-<span id="cb53-3"><a href=""></a>       <span class="at">q =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  be er rę ęs se wi ew ic re nc cz en ce
-a  1  1  1  1  1  1  1  1  0  0  1  0  0
-b  1  1  0  0  0  1  1  1  1  1  1  1  1</code></pre>
 </div>
 </div>
 </section>
@@ -1256,7 +1256,7 @@ b  1  1  0  0  0  1  1  1  1  1  1  1  1</code></pre>
 <h2>Odległość <span class="math inline">\(q\)</span>-gram (ćwiczenia)</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="countdown" id="timer_97b512c5" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_0f481dee" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -1370,7 +1370,7 @@ b  1  0  0  0  1  1  1  1</code></pre>
 <h2>Odległość cosinowa (ćwiczenia)</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="countdown" id="timer_5d39cf6a" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_79526ec3" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -1435,8 +1435,8 @@ b  0  0  0  1  0  0  1  1  0  1  0  1  0  1  0  1</code></pre>
 </div>
 </div>
 </section>
-<section id="odległość-jaro" class="slide level2">
-<h2>Odległość Jaro</h2>
+<section id="odległość-jaro-1" class="slide level2">
+<h2>Odległość Jaro (1)</h2>
 <ul>
 <li>Podobieństwo Jaro między ciągami znaków a i b wyraża się następującym wzorem:</li>
 <li>Wzór</li>
@@ -1445,8 +1445,12 @@ b  0  0  0  1  0  0  1  1  0  1  0  1  0  1  0  1</code></pre>
 \left\{\begin{array}{ll}0 &amp; \text { dla } m=0 \\ 1- \frac{1}{3}\left(\frac{m}{|a|}+\frac{m}{|b|}+\frac{m-t}{m}\right) &amp; \text { dla } m \neq 0\end{array}\right.
 \]</span> gdzie</p>
 <ul>
-<li><span class="math inline">\(m\)</span> to liczba pasujących znaków. Dwa znaki, odpowiednio z a i (b), sa uważane za pasujące tylko wtedy, gdy są takie same i są nie dalej niż</li>
+<li><span class="math inline">\(m\)</span> to liczba pasujących znaków.</li>
 </ul>
+</section>
+<section id="odległość-jaro-2" class="slide level2">
+<h2>Odległość Jaro (2)</h2>
+<p>Dwa znaki, odpowiednio z a i (b), sa uważane za pasujące tylko wtedy, gdy są takie same i są nie dalej niż</p>
 <p><span class="math display">\[
 \left\lfloor\frac{\max (|a|,|b|)}{2}\right\rfloor-1
 \]</span></p>
@@ -1517,7 +1521,7 @@ d_{\mathrm{jw}}(a, b)=d_{\mathrm{jaro}}(a, b)[1-p \ell(a, b)],
 <ul>
 <li>mając 3 rekordy (a, b, c) w bazie danych liczba możliwych porównań to 3 (ab, ac, bc)</li>
 <li>mając 10 rekordów mamy: 45</li>
-<li>mając 50000 rekordów mamy: 1.249975^{9}</li>
+<li>mając 50000 rekordów mamy: 1249.975 mln kombinacji</li>
 <li>liczba kombinacji: n*(n-1)/2</li>
 <li>nie da się tego zrobić dla dużych zbiorów danych</li>
 </ul>
@@ -1535,13 +1539,14 @@ d_{\mathrm{jw}}(a, b)=d_{\mathrm{jaro}}(a, b)[1-p \ell(a, b)],
 <section id="przykład" class="slide level2">
 <h2>Przykład</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href=""></a>dane <span class="ot">&lt;-</span> <span class="fu">qgrams</span>(<span class="at">.list =</span> <span class="fu">list</span>(<span class="st">"maciejj"</span>, <span class="st">"majej"</span>, <span class="st">"ana"</span>, <span class="st">"annna"</span>), <span class="at">q=</span><span class="dv">2</span>)</span>
-<span id="cb80-2"><a href=""></a>dane_rej <span class="ot">&lt;-</span> <span class="fu">qgrams</span>(<span class="at">.list =</span> <span class="fu">list</span>(<span class="st">"maciej"</span>, <span class="st">"anna"</span>), <span class="at">q=</span><span class="dv">2</span>)</span>
-<span id="cb80-3"><a href=""></a>vars <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">colnames</span>(dane), <span class="fu">colnames</span>(dane_rej))</span>
-<span id="cb80-4"><a href=""></a>wysz <span class="ot">&lt;-</span> <span class="fu">nn2</span>(<span class="at">data =</span> dane[,vars], dane_rej[, vars], , <span class="at">k=</span> <span class="dv">1</span>)</span>
-<span id="cb80-5"><a href=""></a>do_grafu <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">query =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">neg =</span> <span class="fu">rep</span>(wysz<span class="sc">$</span>nn.idx[,<span class="dv">1</span>], <span class="at">each=</span><span class="dv">2</span>))</span>
-<span id="cb80-6"><a href=""></a>g1 <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(do_grafu)</span>
-<span id="cb80-7"><a href=""></a><span class="fu">plot</span>(g1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb80-2"><a href=""></a>dane <span class="ot">&lt;-</span> <span class="fu">qgrams</span>(<span class="at">.list =</span> <span class="fu">list</span>(<span class="st">"maciejj"</span>, <span class="st">"majej"</span>, <span class="st">"ana"</span>, <span class="st">"annna"</span>), <span class="at">q=</span><span class="dv">2</span>)</span>
+<span id="cb80-3"><a href=""></a>dane_rej <span class="ot">&lt;-</span> <span class="fu">qgrams</span>(<span class="at">.list =</span> <span class="fu">list</span>(<span class="st">"maciej"</span>, <span class="st">"anna"</span>), <span class="at">q=</span><span class="dv">2</span>)</span>
+<span id="cb80-4"><a href=""></a>vars <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">colnames</span>(dane), <span class="fu">colnames</span>(dane_rej))</span>
+<span id="cb80-5"><a href=""></a>wysz <span class="ot">&lt;-</span> <span class="fu">nn2</span>(<span class="at">data =</span> dane[,vars], dane_rej[, vars], , <span class="at">k=</span> <span class="dv">1</span>)</span>
+<span id="cb80-6"><a href=""></a>do_grafu <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">query =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">neg =</span> <span class="fu">rep</span>(wysz<span class="sc">$</span>nn.idx[,<span class="dv">1</span>], <span class="at">each=</span><span class="dv">2</span>))</span>
+<span id="cb80-7"><a href=""></a>g1 <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(do_grafu)</span>
+<span id="cb80-8"><a href=""></a><span class="fu">plot</span>(g1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="prezentacja_files/figure-revealjs/przyklad-1.png" width="960" class="r-stretch"></section>
@@ -1558,156 +1563,160 @@ d_{\mathrm{jw}}(a, b)=d_{\mathrm{jaro}}(a, b)[1-p \ell(a, b)],
 <section id="blokowanie-z-wykorzystaniem-soundex-1" class="slide level2">
 <h2>Blokowanie z wykorzystaniem <code>SOUNDEX</code></h2>
 <ul>
-<li><code>RecordLinkage</code> – implementuje algorytm soundex</li>
+<li><code>RecordLinkage</code>, <code>reclin2</code>, <code>stringdist</code> – implementuje algorytm soundex</li>
 <li><code>phonics</code> – pakiet implementuje wiele popularnych algorytmów (Howard, J. P. (2020). Phonetic spelling algorithm implementations for R. Journal of Statistical Software, 95, 1-21.)</li>
 </ul>
 </section>
-<section id="daitch-mokotoff-soundex-dla-języka-polskiego" class="slide level2">
-<h2>Daitch-Mokotoff SOUNDEX dla języka polskiego</h2>
-<p>Czym jest Daitch-Mokotoff SOUNDEX?</p>
+<section id="algortym-soundex-russell-1918" class="slide level2">
+<h2>Algortym <code>SOUNDEX</code> (Russell, 1918)</h2>
 <ul>
-<li>Algorytm fonetyczny zaprojektowany dla nazwisk wschodnioeuropejskich</li>
-<li>Bardziej precyzyjny niż klasyczny SOUNDEX</li>
-<li>Uwzględnia specyfikę polskiej fonetyki</li>
+<li><strong>Zachowaj pierwszą literę</strong></li>
 </ul>
-</section>
-<section id="daitch-mokotoff-soundex-dla-języka-polskiego-etap-1" class="slide level2">
-<h2>Daitch-Mokotoff SOUNDEX dla języka polskiego – etap 1</h2>
-<p>Normalizacja polskich znaków</p>
-<pre><code>Oryginalne nazwisko: "Wójcik"
-↓
-Normalizacja znaków diakrytycznych:
-Ó → U
-↓
-Wynik: "WUJCIK"</code></pre>
-<p>Przykłady normalizacji:</p>
+<pre><code>SMITH → S___</code></pre>
+<ul>
+<li><strong>Mapuj litery na cyfry:</strong></li>
+</ul>
 <table class="caption-top">
 <thead>
 <tr class="header">
-<th>Oryginalny</th>
-<th>Znormalizowany</th>
+<th>Litery</th>
+<th>Cyfra</th>
+<th>Litery</th>
+<th>Cyfra</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Kowalski</td>
-<td>KOWALSKI</td>
+<td>B,F,P,V</td>
+<td><strong>1</strong></td>
+<td>L</td>
+<td><strong>4</strong></td>
 </tr>
 <tr class="even">
-<td>Wiśniewski</td>
-<td>WISNIEWSKI</td>
+<td>C,G,J,K,Q,S,X,Z</td>
+<td><strong>2</strong></td>
+<td>M,N</td>
+<td><strong>5</strong></td>
 </tr>
 <tr class="odd">
-<td>Wójcik</td>
-<td>WUJCIK</td>
-</tr>
-<tr class="even">
-<td>Dąbrowski</td>
-<td>DONBROWSKI</td>
+<td>D,T</td>
+<td><strong>3</strong></td>
+<td>R</td>
+<td><strong>6</strong></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="daitch-mokotoff-soundex-dla-języka-polskiego-etap-2" class="slide level2">
-<h2>Daitch-Mokotoff SOUNDEX dla języka polskiego – etap 2</h2>
-<p>Przypisanie kodów fonetycznych</p>
-<p><strong>Tablica kodowania (fragment):</strong></p>
 <ul>
-<li>Samogłoski (A,E,I,O,U) → 0</li>
-<li>B,P → 7</li>
-<li>C,K,Q → 4</li>
-<li>D,T → 3</li>
-<li>F,V,W → 8</li>
-<li>G,J → 5/1</li>
-<li>L,R → 9</li>
-<li>M,N → 6</li>
-<li>S,Z → 4</li>
+<li><strong>Ignoruj:</strong> A, E, I, O, U, Y, H, W</li>
 </ul>
 </section>
-<section id="daitch-mokotoff-soundex-dla-języka-polskiego-etap-2-1" class="slide level2">
-<h2>Daitch-Mokotoff SOUNDEX dla języka polskiego – etap 2</h2>
-<p>Przykład krok po kroku: “KOWALSKI”</p>
-<pre><code>K-O-W-A-L-S-K-I
-↓
-K(4) O(0) W(8) A(0) L(9) S(4) K(4) I(0)
-↓
-Pierwsza litera: K
-Kody bez powtórzeń i zer: 4-8-9-4
-↓
-Wynik: K48940</code></pre>
-</section>
-<section id="daitch-mokotoff-soundex-dla-języka-polskiego-wyniki" class="slide level2">
-<h2>Daitch-Mokotoff SOUNDEX dla języka polskiego – wyniki</h2>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Nazwisko</th>
-<th>Kod SOUNDEX</th>
-<th>Grupa</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Kowalski</td>
-<td>K48940</td>
-<td>A</td>
-</tr>
-<tr class="even">
-<td>Kowalsky</td>
-<td>K48940</td>
-<td>A</td>
-</tr>
-<tr class="odd">
-<td>Kowaliski</td>
-<td>K48940</td>
-<td>A</td>
-</tr>
-<tr class="even">
-<td>Nowak</td>
-<td>N840000</td>
-<td>B</td>
-</tr>
-<tr class="odd">
-<td>Novak</td>
-<td>N840000</td>
-<td>B</td>
-</tr>
-<tr class="even">
-<td>Wiśniewski</td>
-<td>W464800</td>
-<td>C</td>
-</tr>
-<tr class="odd">
-<td>Wisniewski</td>
-<td>W464800</td>
-<td>C</td>
-</tr>
-<tr class="even">
-<td>Wójcik</td>
-<td>W154000</td>
-<td>D</td>
-</tr>
-<tr class="odd">
-<td>Wojcik</td>
-<td>W154000</td>
-<td>D</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="daitch-mokotoff-soundex-dla-języka-polskiego-podsumowanie" class="slide level2">
-<h2>Daitch-Mokotoff SOUNDEX dla języka polskiego – podsumowanie</h2>
-<p>Praktyczne zastosowania:</p>
+<section id="algortym-soundex-russell-1918-1" class="slide level2">
+<h2>Algortym <code>SOUNDEX</code> (Russell, 1918)</h2>
 <ul>
-<li><strong>Deduplikacja baz danych</strong> - identyfikacja duplikatów z błędami pisowni</li>
-<li><strong>Wyszukiwanie rozmyte</strong> - znajdowanie podobnych nazwisk</li>
-<li><strong>Łączenie rekordów</strong> - integracja danych z różnych źródeł</li>
+<li><strong>Usuń duplikaty</strong> sąsiadujących cyfr</li>
 </ul>
-<p>Zalety dla języka polskiego:</p>
-<p>✓ Uwzględnia polskie znaki diakrytyczne<br>
-✓ Radzi sobie z typowymi błędami pisowni<br>
-✓ Skuteczny dla nazwisk słowiańskich<br>
-✓ Lepszy niż standardowy SOUNDEX dla polszczyzny</p>
+<pre><code>PFISTER → P123366 → P1236</code></pre>
+<ul>
+<li><strong>Dopełnij/przytnij do 4 znaków</strong></li>
+</ul>
+<pre><code>SMITH → S53 → S530
+PFISTER → P1236 → P123</code></pre>
+</section>
+<section id="algortym-soundex-krok-po-kroku" class="slide level2">
+<h2>Algortym <code>SOUNDEX</code> – krok po kroku</h2>
+<p>Przykład: SMITH → S530</p>
+<ul>
+<li>Pierwsza litera: S</li>
+<li>Mapowanie: S-M-I-T-H → S-5-[I]-3-[H] → S-5-3</li>
+<li>Duplikaty: Brak</li>
+<li>Dopełnienie: S53 → S530</li>
+</ul>
+</section>
+<section id="algortym-soundex-krok-po-kroku-1" class="slide level2">
+<h2>Algortym <code>SOUNDEX</code> – krok po kroku</h2>
+<p>Przykład: WILLIAMS → W452</p>
+<ul>
+<li>Pierwsza litera: W</li>
+<li>Mapowanie: W-I-L-L-I-A-M-S → W-[I]-4-4-[I]-[A]-5-2 → W-4-4-5-2</li>
+<li>Duplikaty: W-4-4-5-2 → W-4-5-2</li>
+<li>Przycinanie: W452 → W452</li>
+</ul>
+</section>
+<section id="algortym-soundex-przykład-w-r" class="slide level2">
+<h2>Algortym <code>SOUNDEX</code> – przykład w R</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "S530"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "W452"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "S530"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "W452"</code></pre>
+</div>
+</div>
+</section>
+<section id="daitch-mokotoff-soundex" class="slide level2">
+<h2>Daitch-Mokotoff SOUNDEX</h2>
+<p>Nazwiska są kodowane do sześciu cyfr, gdzie każda cyfra reprezentuje dźwięk wymieniony w tabeli kodowania (<a href="https://www.jewishgen.org/infofiles/soundex.html">źródło</a>).</p>
+<ol type="1">
+<li><p>Gdy nazwisko ma za mało kodowanych dźwięków na sześć cyfr, używaj zer do uzupełnienia do sześciu cyfr.</p>
+<ul>
+<li>Przykład: <code>GOLDEN</code>, które ma tylko cztery kodowane dźwięki <code>[G-L-D-N]</code>, jest kodowane jako <code>583600</code>.</li>
+</ul></li>
+<li><p>Litery A, E, I, O, U, J i Y są zawsze kodowane na początku nazwiska, jak w <code>Alpert 087930</code>. W każdej innej sytuacji są ignorowane, z wyjątkiem przypadku gdy dwie z nich tworzą parę i para poprzedza samogłoskę, jak w <code>Breuer 791900</code>, ale nie w Freud.</p></li>
+<li><p>Litera H jest kodowana na początku nazwiska, jak w Haber 579000, lub przed samogłoską, jak w Manheim 665600, w przeciwnym razie nie jest kodowana.</p></li>
+<li><p>Gdy sąsiadujące dźwięki mogą się połączyć w większy dźwięk, otrzymują numer kodu większego dźwięku. Mintz nie jest kodowane jako <code>MIN-T-Z</code>, ale <code>MIN-TZ</code> 664000.</p></li>
+</ol>
+</section>
+<section id="daitch-mokotoff-soundex-1" class="slide level2">
+<h2>Daitch-Mokotoff SOUNDEX</h2>
+<ol start="5" type="1">
+<li><p>Gdy sąsiadujące litery mają ten sam numer kodu, są kodowane jako jeden dźwięk, jak w TOPF, które nie jest kodowane TO-P-F 377000, ale TO-PF 370000. Wyjątkami od tej reguły są kombinacje liter MN i NM, których litery są kodowane oddzielnie, jak w Kleinman, które jest kodowane 586660, a nie 586600.</p></li>
+<li><p>Gdy nazwisko składa się z więcej niż jednego słowa, jest kodowane jakby to było jedno słowo, takie jak “Ben Aron”, które jest traktowane jako “Benaron”.</p></li>
+<li><p>Kilka liter i kombinacji liter stwarza problem, że mogą brzmieć na jeden z dwóch sposobów. Litery i kombinacje liter CH, CK, C, J i RS mają przypisane dwa możliwe numery kodów.</p></li>
+</ol>
+</section>
+<section id="kluczowe-reguły" class="slide level2">
+<h2>Kluczowe reguły</h2>
+<ul>
+<li><strong>NC</strong> = nie kodowane</li>
+<li><strong>Pozycja ma znaczenie</strong>: Start/Before vowel/Any other</li>
+<li><strong>Kombinacje liter</strong> mają priorytet nad pojedynczymi</li>
+<li><strong>Maksymalna długość</strong>: 6 cyfr, uzupełniane zerami</li>
+</ul>
+</section>
+<section id="przykład-kowalski" class="slide level2">
+<h2>Przykład: KOWALSKI</h2>
+<h3 id="mapowanie-krok-po-kroku">Mapowanie krok po kroku:</h3>
+<pre><code>K - O - W - A - L - S - K - I
+↓   ↓   ↓   ↓   ↓   ↓   ↓   ↓
+5 - NC- 7 - NC- 8 - 4 - 5 - NC</code></pre>
+<p><strong>Wynik:</strong> K(5) + W(7) + L(8) + S(4) + K(5) = <code>57845</code> <strong>Uzupełnione do 6 cyfr:</strong> <code>578450</code></p>
+</section>
+<section id="przykład-wójcik" class="slide level2">
+<h2>Przykład: WÓJCIK</h2>
+<h3 id="normalizacja-wójcik-wojcik-ó-nie-ma-w-oryginalnej-tabeli">Normalizacja: <strong>WÓJCIK</strong> → <strong>WOJCIK</strong> (Ó nie ma w oryginalnej tabeli)</h3>
+<h3 id="mapowanie-krok-po-kroku-1">Mapowanie krok po kroku:</h3>
+<pre><code>W - O - J - C - I - K
+↓   ↓   ↓   ↓   ↓   ↓
+7 - NC- ? - ? - NC- 5</code></pre>
+<h3 id="dwuznaczności">Dwuznaczności:</h3>
+<ul>
+<li><strong>J</strong> (przed samogłoską I) → <strong>1</strong> (Y) lub <strong>4</strong> (DZH)</li>
+<li><strong>C</strong> (przed samogłoską I) → <strong>5</strong> (K) lub <strong>4</strong> (TZ)</li>
+</ul>
+<h3 id="wszystkie-kombinacje">Wszystkie kombinacje:</h3>
+<pre><code>Wariant 1: 7 - NC - 1 - 5 - NC - 5 = 71550
+Wariant 2: 7 - NC - 1 - 4 - NC - 5 = 71450  
+Wariant 3: 7 - NC - 4 - 5 - NC - 5 = 74550
+Wariant 4: 7 - NC - 4 - 4 - NC - 5 = 74450</code></pre>
+<p><strong>Wyniki:</strong> <code>71550</code>, <code>71450</code>, <code>74550</code>, <code>74450</code></p>
 </section>
 <section id="pakiety-w-r-do-probabilistycznego-blokowania-rekordów" class="slide level2">
 <h2>Pakiety w R do probabilistycznego blokowania rekordów</h2>
@@ -1855,6 +1864,15 @@ Konwersja na prawdopodobieństwo (0-100%)</code></pre>
 <h2>Wprowadzenie do modelu Fellegi-Sunter</h2>
 <p><strong>Cel modelu</strong></p>
 <p>Określenie prawdopodobieństwa, że dwa rekordy odnoszą się do tej samej osoby na podstawie dostępnych danych.</p>
+<p><strong>Przykład polskich danych</strong></p>
+<pre><code>Rekord 1: Jan Kowalski, M, 1985-03-15, Warszawa
+Rekord 2: Jan Kowalski, M, 1985-03-15, Warszawa</code></pre>
+<p><strong>Pytanie:</strong> Czy to ta sama osoba?<br>
+Model Fellegi-Sunter da nam na to odpowiedź w postaci prawdopodobieństwa.</p>
+</section></section>
+<section>
+<section id="model-fellegiego-suntera-konkretnie-1" class="title-slide slide level1 center" data-number="7">
+<h1><span class="header-section-number">7</span> Model Fellegiego-Suntera (konkretnie)</h1>
 <p><strong>Podstawowe założenia</strong></p>
 <ul>
 <li><strong>Zbiór M</strong> - pary rekordów odnoszące się do tej samej osoby (matches)</li>
@@ -1862,12 +1880,7 @@ Konwersja na prawdopodobieństwo (0-100%)</code></pre>
 </li>
 <li><strong>Zbiór A</strong> - wszystkie możliwe pary rekordów</li>
 </ul>
-<p><strong>Przykład polskich danych</strong></p>
-<pre><code>Rekord 1: Jan Kowalski, M, 1985-03-15, Warszawa
-Rekord 2: Jan Kowalski, M, 1985-03-15, Warszawa</code></pre>
-<p><strong>Pytanie:</strong> Czy to ta sama osoba?<br>
-Model Fellegi-Sunter da nam na to odpowiedź w postaci prawdopodobieństwa.</p>
-<p><strong>Wzór podstawowy</strong></p>
+<p><strong>Podstawowy wzór</strong></p>
 <p><span class="math display">\[P(\text{match} | \gamma) = \frac{P(\gamma | M) \cdot P(M)}{P(\gamma | M) \cdot P(M) + P(\gamma | U) \cdot P(U)}\]</span></p>
 <p>gdzie <span class="math inline">\(\gamma\)</span> to wektor porównań pól.</p>
 </section>
@@ -1880,27 +1893,30 @@ Model Fellegi-Sunter da nam na to odpowiedź w postaci prawdopodobieństwa.</p>
 <li><strong>P(match | γ)</strong> - prawdopodobieństwo dopasowania <strong>PRZY DANYM</strong> wektorze porównań γ</li>
 <li>To jest to, czego szukamy - <strong>odpowiedź modelu</strong></li>
 </ul>
-<p><strong>Licznik:</strong> - <strong>P(γ | M)</strong> - prawdopodobieństwo obserwacji wektora γ <strong>GDY</strong> para należy do M (to ta sama osoba) - <strong>P(M)</strong> - prawdopodobieństwo wstępne, że losowa para to dopasowanie</p>
-<p><strong>Mianownik:</strong> - <strong>P(γ | M) · P(M)</strong> - prawdopodobieństwo obserwacji γ gdy to dopasowanie - <strong>P(γ | U) · P(U)</strong> - prawdopodobieństwo obserwacji γ gdy to nie-dopasowanie - <strong>Suma = P(γ)</strong> - całkowite prawdopodobieństwo obserwacji γ</p>
+<p><strong>Licznik:</strong></p>
+<ul>
+<li><strong>P(γ | M)</strong> - prawdopodobieństwo obserwacji wektora γ <strong>GDY</strong> para należy do M (to ta sama osoba)</li>
+<li><strong>P(M)</strong> - prawdopodobieństwo wstępne, że losowa para to dopasowanie</li>
+</ul>
+<p><strong>Mianownik:</strong></p>
+<ul>
+<li><strong>P(γ | M) · P(M)</strong> - prawdopodobieństwo obserwacji γ gdy to dopasowanie</li>
+<li><strong>P(γ | U) · P(U)</strong> - prawdopodobieństwo obserwacji γ gdy to nie-dopasowanie</li>
+<li><strong>Suma = P(γ)</strong> - całkowite prawdopodobieństwo obserwacji γ</li>
+</ul>
 </section>
 <section id="wyjaśnienie-ptextmatch-gamma-1" class="slide level2">
 <h2>Wyjaśnienie <span class="math inline">\(P(\text{match} | \gamma)\)</span></h2>
-<p><strong>Wzór odpowiada na pytanie:</strong> &gt; “Mając obserwację γ, jakie jest prawdopodobieństwo, że to dopasowanie?”</p>
-<p><strong>Logika:</strong> 1. <strong>Licznik</strong> - jak prawdopodobne jest γ jeśli to dopasowanie × szansa na dopasowanie 2. <strong>Mianownik</strong> - jak prawdopodobne jest γ we wszystkich możliwych przypadkach 3. <strong>Wynik</strong> - proporcja “dowodów za” do “wszystkich dowodów”</p>
-</section>
-<section id="wyjaśnienie-ptextmatch-gamma-2" class="slide level2">
-<h2>Wyjaśnienie <span class="math inline">\(P(\text{match} | \gamma)\)</span></h2>
-<p><strong>Dane:</strong></p>
-<ul>
-<li>γ = (1,1,0) - imię i nazwisko się zgadzają, data urodzenia nie</li>
-<li>P(M) = 0.0001 (1 na 10,000)</li>
-<li>P(<span class="math inline">\(\gamma\)</span> | M) = 0.05 (5% szans na błąd w dacie dla tej samej osoby)</li>
-<li>P(<span class="math inline">\(\gamma\)</span> | U) = 0.00002 (bardzo mała szansa przypadkowej zgodności imienia i nazwiska)</li>
-</ul>
-<p><strong>Obliczenie:</strong></p>
-<p><span class="math display">\[P(\text{match} | \gamma) = \frac{0.05 \times 0.0001}{0.05 \times 0.0001 + 0.00002 \times 0.9999} = \frac{0.000005}{0.000005 + 0.000019998} = 0.2\]</span></p>
-<p><strong>Wynik: 20%</strong> – mimo zgodności imienia i nazwiska, błąd w dacie obniża prawdopodobieństwo dopasowania.</p>
-<p>Wzór <strong>równoważy</strong> dowody za dopasowaniem z dowodami przeciw, uwzględniając jak rzadkie są dopasowania w ogóle.</p>
+<p><strong>Wzór odpowiada na pytanie:</strong></p>
+<blockquote>
+<p>“Mając obserwację γ, jakie jest prawdopodobieństwo, że to dopasowanie?”</p>
+</blockquote>
+<p><strong>Logika:</strong></p>
+<ol type="1">
+<li><strong>Licznik</strong> - jak prawdopodobne jest γ jeśli to dopasowanie × szansa na dopasowanie</li>
+<li><strong>Mianownik</strong> - jak prawdopodobne jest γ we wszystkich możliwych przypadkach</li>
+<li><strong>Wynik</strong> - proporcja “dowodów za” do “wszystkich dowodów”</li>
+</ol>
 </section>
 <section id="definicja-wektora-porównań-gamma" class="slide level2">
 <h2>Definicja wektora porównań <span class="math inline">\(\gamma\)</span></h2>
@@ -1911,7 +1927,14 @@ Model Fellegi-Sunter da nam na to odpowiedź w postaci prawdopodobieństwa.</p>
 0 &amp; \text{jeśli pola się różnią}
 \end{cases}\]</span></p>
 <h3 id="przykład-porównania">Przykład porównania:</h3>
-<p><strong>Dane:</strong> - <strong>Rekord A:</strong> Anna Nowak, K, 1990-05-20, 00-001 - <strong>Rekord B:</strong> Anna Nowak, K, 1990-05-20, 00-002</p>
+<p><strong>Dane:</strong></p>
+<ul>
+<li><strong>Rekord A:</strong> Anna Nowak, K, 1990-05-20, 00-001</li>
+<li><strong>Rekord B:</strong> Anna Nowak, K, 1990-05-20, 00-002</li>
+</ul>
+</section>
+<section id="definicja-wektora-porównań-gamma-1" class="slide level2">
+<h2>Definicja wektora porównań <span class="math inline">\(\gamma\)</span></h2>
 <p><strong>Wektor γ:</strong></p>
 <table class="caption-top">
 <thead>
@@ -1965,6 +1988,9 @@ prawdopodobieństwo zgodności i-tego pola gdy to różne osoby</p></li>
 <li><span class="math inline">\(m_i \approx 1\)</span> – pole rzadko ma błędy dla tej samej osoby</li>
 <li><span class="math inline">\(u_i \approx 0\)</span> – pole rzadko jest przypadkowo zgodne dla różnych osób</li>
 </ul>
+</section>
+<section id="parametry-m-i-u-1" class="slide level2">
+<h2>Parametry <span class="math inline">\(m\)</span> i <span class="math inline">\(u\)</span></h2>
 <h3 id="przykładowe-wartości-dla-polskich-danych">Przykładowe wartości dla polskich danych:</h3>
 <table class="caption-top">
 <thead>
@@ -2008,6 +2034,21 @@ prawdopodobieństwo zgodności i-tego pola gdy to różne osoby</p></li>
 </tr>
 </tbody>
 </table>
+<p>Skąd je wziąć? Możemy mieć historyczne dane ale w praktyce estymujemy te parametry na podstawie danych wejściowych.</p>
+</section>
+<section id="wyjaśnienie-ptextmatch-gamma-2" class="slide level2">
+<h2>Wyjaśnienie <span class="math inline">\(P(\text{match} | \gamma)\)</span></h2>
+<p><strong>Dane:</strong></p>
+<ul>
+<li>γ = (1,1,0) - imię i nazwisko się zgadzają, data urodzenia nie</li>
+<li>P(M) = 0.0001 (1 na 10,000)</li>
+<li>P(<span class="math inline">\(\gamma\)</span> | M) = 0.05 (5% błąd w dacie dla tej samej osoby)</li>
+<li>P(<span class="math inline">\(\gamma\)</span> | U) = 0.00002 (bardzo niskie prawdopodobieństwo przypadkowej zgodności imienia i nazwiska)</li>
+</ul>
+<p><strong>Obliczenie:</strong></p>
+<p><span class="math display">\[P(\text{match} | \gamma) = \frac{0.05 \times 0.0001}{0.05 \times 0.0001 + 0.00002 \times 0.9999} = \frac{0.000005}{0.000005 + 0.000019998} = 0.2\]</span></p>
+<p><strong>Wynik: 20%</strong> – mimo zgodności imienia i nazwiska, błąd w dacie obniża prawdopodobieństwo dopasowania.</p>
+<p>Wzór <strong>równoważy</strong> dowody za dopasowaniem z dowodami przeciw, uwzględniając jak rzadkie są dopasowania w ogóle.</p>
 </section>
 <section id="wyznaczanie-wag-częściowych" class="slide level2">
 <h2>Wyznaczanie wag częściowych</h2>
@@ -2015,7 +2056,9 @@ prawdopodobieństwo zgodności i-tego pola gdy to różne osoby</p></li>
 <p><span class="math display">\[w_i^{(1)} = \log_2\left(\frac{m_i}{u_i}\right)\]</span></p>
 <p><strong>Gdy pola się różnią (<span class="math inline">\(\gamma_i = 0\)</span>):</strong></p>
 <p><span class="math display">\[w_i^{(0)} = \log_2\left(\frac{1-m_i}{1-u_i}\right)\]</span></p>
-<h3 id="przykład-obliczenia-dla-imienia">Przykład obliczenia dla imienia:</h3>
+</section>
+<section id="przykład-obliczenia-dla-imienia" class="slide level2">
+<h2>Przykład obliczenia dla imienia:</h2>
 <p><strong>Dane:</strong> <span class="math inline">\(m_i\)</span> = 0.92, <span class="math inline">\(u_i\)</span> = 0.008</p>
 <p><strong>Zgodność (<span class="math inline">\(\gamma_i = 1\)</span>):</strong></p>
 <p><span class="math display">\[w_i^{(1)} = \log_2\left(\frac{0.92}{0.008}\right) = \log_2(115) = +6.85\]</span></p>
@@ -2084,7 +2127,7 @@ prawdopodobieństwo zgodności i-tego pola gdy to różne osoby</p></li>
 <h2>Prawdopodobieństwo wstępne (prior)</h2>
 <h3 id="definicja">Definicja:</h3>
 <p><span class="math display">\[P(M) = \frac{\text{liczba oczekiwanych par dopasowanych}}{\text{łączna liczba par}}\]</span></p>
-<h3 id="przykład-obliczenia">Przykład obliczenia:</h3>
+<h3 id="przykład-1">Przykład:</h3>
 <p><strong>Scenariusz:</strong></p>
 <p>Łączymy bazę pacjentów (10,000 osób) z bazą ubezpieczeniową (12,000 osób)</p>
 <ul>
@@ -2092,7 +2135,10 @@ prawdopodobieństwo zgodności i-tego pola gdy to różne osoby</p></li>
 <li>Oczekiwane dopasowania: ~9,500 (95% pacjentów ma ubezpieczenie)</li>
 <li>P(M) = 9,500 / 120,000,000 = 0.0000792</li>
 </ul>
-<h3 id="w-praktyce">W praktyce:</h3>
+</section>
+<section id="waga-wstępna-prior" class="slide level2">
+<h2>Waga wstępna (prior)</h2>
+<h3 id="przykład-2">Przykład:</h3>
 <p>Większość par to nie-dopasowania, dlatego P(M) jest bardzo małe.</p>
 <h3 id="wzór-w-skali-logarytmicznej">Wzór w skali logarytmicznej:</h3>
 <p><span class="math display">\[w_0 = \log_2\left(\frac{P(M)}{P(U)}\right) = \log_2\left(\frac{P(M)}{1-P(M)}\right)\]</span></p>
@@ -2142,6 +2188,9 @@ prawdopodobieństwo zgodności i-tego pola gdy to różne osoby</p></li>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="kompletny-przykład---krok-po-kroku-1" class="slide level2">
+<h2>Kompletny przykład - krok po kroku</h2>
 <h3 id="krok-3-suma-wag">Krok 3: Suma wag</h3>
 <p><span class="math display">\[W = w_0 + \sum_{i=1}^{5} w_i = -13.64 + 6.85 + 8.89 + 0.99 + 8.36 + 23.25 = +34.70\]</span></p>
 </section>
@@ -2153,14 +2202,6 @@ prawdopodobieństwo zgodności i-tego pola gdy to różne osoby</p></li>
 <p><span class="math display">\[P(\text{match}) = \frac{2^{34.70}}{1 + 2^{34.70}} = \frac{2.79 \times 10^{10}}{1 + 2.79 \times 10^{10}} \approx 0.9999999996\]</span></p>
 <h3 id="interpretacja-1">Interpretacja:</h3>
 <p><strong>Prawdopodobieństwo = 99.99999996%</strong> - praktycznie pewność, że to ta sama osoba.</p>
-<h3 id="skala-interpretacji-przykładowa">Skala interpretacji (przykładowa)</h3>
-<ul>
-<li><strong>&gt; 95%</strong> - bardzo prawdopodobne dopasowanie</li>
-<li><strong>80-95%</strong> - prawdopodobne dopasowanie<br>
-</li>
-<li><strong>20-80%</strong> - niepewne</li>
-<li><strong>&lt; 20%</strong> - prawdopodobnie różne osoby</li>
-</ul>
 </section>
 <section id="przykład-z-częściową-niezgodnością" class="slide level2">
 <h2>Przykład z częściową niezgodnością</h2>
@@ -2206,6 +2247,9 @@ prawdopodobieństwo zgodności i-tego pola gdy to różne osoby</p></li>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="przykład-z-częściową-niezgodnością-1" class="slide level2">
+<h2>Przykład z częściową niezgodnością</h2>
 <h3 id="krok-3-obliczenia">Krok 3: Obliczenia</h3>
 <p><span class="math display">\[W = -13.64 + (-3.63) + 8.89 + 0.99 + 8.36 + (-2.15) = -1.18\]</span></p>
 <p><span class="math display">\[P(\text{match}) = \frac{2^{-1.18}}{1 + 2^{-1.18}} = \frac{0.442}{1.442} = 0.307\]</span></p>

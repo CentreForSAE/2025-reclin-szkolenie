@@ -428,6 +428,36 @@ stringdist(a = "miasto Poznań",
            method = "osa")
 ```
 
+## $q$-gramy
+
+-   często wykorzystuje się do porównań $q$-gramy (np. 2-gramy, czasem
+    też nazywane shingles jeżeli odnosimy się do liter),
+-   mozna użyć albo odległości Jaccarda albo $q$-gram,
+-   $q$-gram zdefiniowana jest następująco uzyskuje się poprzez
+    zestawienie q-gramów występujących w dwóch ciągach i zliczenie
+    liczby q-gramów, które nie są współdzielone między nimi.
+
+## $q$-gramy (Przykład)
+
+-   1-gramy: `{B,e,r,ę,s,e,w,i,cz}`
+-   2-gramy: `{Be, er, rę, ęs, se, ew, wi, ic, cz}`
+-   3-gramy: `{Ber, erę, ręs, ęse, sew, wic, ewi, icz}`
+
+## $q$-gramy (Przykład w R)
+
+```{r qgrams1a, echo = TRUE}
+qgrams("Beręsewicz", q=1)
+qgrams("Beręsewicz", q=2)
+qgrams("eręsewicz", q=3)
+```
+
+```{r qgrams1b, echo = TRUE}
+qgrams(a = "beręsewicz",
+       b = "berencewicz",
+       q = 2)
+```
+
+
 ## Odległość Jaccarda
 
 -   Indeks Jaccarda, współczynnik podobieństwa Jaccarda -- statystyka
@@ -547,34 +577,6 @@ stringdist(a = "miasto poznań",
            method = "jaccard")
 ```
 
-## $q$-gramy
-
--   często wykorzystuje się do porównań $q$-gramy (np. 2-gramy, czasem
-    też nazywane shingles jeżeli odnosimy się do liter),
--   mozna użyć albo odległości Jaccarda albo $q$-gram,
--   $q$-gram zdefiniowana jest następująco uzyskuje się poprzez
-    zestawienie q-gramów występujących w dwóch ciągach i zliczenie
-    liczby q-gramów, które nie są współdzielone między nimi.
-
-## $q$-gramy (Przykład)
-
--   1-gramy: `{B,e,r,ę,s,e,w,i,cz}`
--   2-gramy: `{Be, er, rę, ęs, se, ew, wi, ic, cz}`
--   3-gramy: `{Ber, erę, ręs, ęse, sew, wic, ewi, icz}`
-
-## $q$-gramy (Przykład w R)
-
-```{r qgrams1a, echo = TRUE}
-qgrams("Beręsewicz", q=1)
-qgrams("Beręsewicz", q=2)
-qgrams("eręsewicz", q=3)
-```
-
-```{r qgrams1b, echo = TRUE}
-qgrams(a = "beręsewicz",
-       b = "berencewicz",
-       q = 2)
-```
 
 ## $q$-gramy (Przykład w R)
 
@@ -666,7 +668,7 @@ gdzie $||.||_2$ oznacza normę Euklidesową $\sqrt{\sum_i v_{1,i}^2}$.
 res <- qgrams(a= "maciej", b="maicej", q=2)
 v1 <- res[1, ]
 v2 <- res[2, ]
-licznik <- sum(v1*v2)
+licznik <- sum(v1*v2) ## crossprod(v1,v2) ## t(v1) %*% v2
 mianownik <- sqrt(sum(v1^2))*sqrt(sum(v2^2))
 res
 ```
@@ -733,7 +735,7 @@ stringdist(a = "miasto poznań",
            q=2)
 ```
 
-## Odległość Jaro
+## Odległość Jaro (1)
 
 -   Podobieństwo Jaro między ciągami znaków a i b wyraża się
     następującym wzorem:
@@ -743,16 +745,17 @@ $$
 \left\{\begin{array}{ll}0 & \text { dla } m=0 \\ 1- \frac{1}{3}\left(\frac{m}{|a|}+\frac{m}{|b|}+\frac{m-t}{m}\right) & \text { dla } m \neq 0\end{array}\right.
 $$ gdzie
 
--   $m$ to liczba pasujących znaków. Dwa znaki, odpowiednio z a i (b),
-    sa uważane za pasujące tylko wtedy, gdy są takie same i są nie dalej
-    niż
+-   $m$ to liczba pasujących znaków.
 
+## Odległość Jaro (2)
+
+Dwa znaki, odpowiednio z a i (b), sa uważane za pasujące tylko wtedy, gdy są takie same i są nie dalej niż
+    
 $$
 \left\lfloor\frac{\max (|a|,|b|)}{2}\right\rfloor-1
 $$
 
-znaków od siebie, + $t$ to liczba dopasowań po transpozycji drugiego
-ciągu znaków, podzielona przez 2.
+znaków od siebie, + $t$ to liczba dopasowań po transpozycji drugiego ciągu znaków, podzielona przez 2.
 
 ## Odległość Jaro (przykład w R)
 
@@ -825,7 +828,7 @@ stringdist("maciej",
 -   mając 3 rekordy (a, b, c) w bazie danych liczba możliwych porównań
     to 3 (ab, ac, bc)
 -   mając 10 rekordów mamy: 45
--   mając 50000 rekordów mamy: `r choose(50000,2)`
+-   mając 50000 rekordów mamy: `r choose(50000,2)/1e6` mln kombinacji
 -   liczba kombinacji: n\*(n-1)/2
 -   nie da się tego zrobić dla dużych zbiorów danych
 
@@ -843,6 +846,7 @@ stringdist("maciej",
 ## Przykład
 
 ```{r przyklad, echo=T}
+set.seed(123)
 dane <- qgrams(.list = list("maciejj", "majej", "ana", "annna"), q=2)
 dane_rej <- qgrams(.list = list("maciej", "anna"), q=2)
 vars <- intersect(colnames(dane), colnames(dane_rej))
@@ -874,102 +878,142 @@ Czym jest `SOUNDEX`?
 
 ## Blokowanie z wykorzystaniem `SOUNDEX`
 
--   `RecordLinkage` -- implementuje algorytm soundex
+-   `RecordLinkage`, `reclin2`, `stringdist` -- implementuje algorytm soundex
 -   `phonics` -- pakiet implementuje wiele popularnych algorytmów
     (Howard, J. P. (2020). Phonetic spelling algorithm implementations
     for R. Journal of Statistical Software, 95, 1-21.)
 
-## Daitch-Mokotoff SOUNDEX dla języka polskiego
+## Algortym `SOUNDEX` (Russell, 1918)
 
-Czym jest Daitch-Mokotoff SOUNDEX?
-
--   Algorytm fonetyczny zaprojektowany dla nazwisk wschodnioeuropejskich
--   Bardziej precyzyjny niż klasyczny SOUNDEX
--   Uwzględnia specyfikę polskiej fonetyki
-
-## Daitch-Mokotoff SOUNDEX dla języka polskiego -- etap 1
-
-Normalizacja polskich znaków
-
-```         
-Oryginalne nazwisko: "Wójcik"
-↓
-Normalizacja znaków diakrytycznych:
-Ó → U
-↓
-Wynik: "WUJCIK"
++ **Zachowaj pierwszą literę**
+```
+SMITH → S___
 ```
 
-Przykłady normalizacji:
++ **Mapuj litery na cyfry:**
 
-| Oryginalny | Znormalizowany |
-|------------|----------------|
-| Kowalski   | KOWALSKI       |
-| Wiśniewski | WISNIEWSKI     |
-| Wójcik     | WUJCIK         |
-| Dąbrowski  | DONBROWSKI     |
+| Litery | Cyfra | Litery | Cyfra |
+|--------|-------|--------|-------|
+| B,F,P,V | **1** | L | **4** |
+| C,G,J,K,Q,S,X,Z | **2** | M,N | **5** |
+| D,T | **3** | R | **6** |
 
-## Daitch-Mokotoff SOUNDEX dla języka polskiego -- etap 2
++ **Ignoruj:** A, E, I, O, U, Y, H, W
 
-Przypisanie kodów fonetycznych
+## Algortym `SOUNDEX` (Russell, 1918)
 
-**Tablica kodowania (fragment):**
-
--   Samogłoski (A,E,I,O,U) → 0
--   B,P → 7
--   C,K,Q → 4
--   D,T → 3
--   F,V,W → 8
--   G,J → 5/1
--   L,R → 9
--   M,N → 6
--   S,Z → 4
-
-## Daitch-Mokotoff SOUNDEX dla języka polskiego -- etap 2
-
-Przykład krok po kroku: "KOWALSKI"
-
-```         
-K-O-W-A-L-S-K-I
-↓
-K(4) O(0) W(8) A(0) L(9) S(4) K(4) I(0)
-↓
-Pierwsza litera: K
-Kody bez powtórzeń i zer: 4-8-9-4
-↓
-Wynik: K48940
++ **Usuń duplikaty** sąsiadujących cyfr
+```
+PFISTER → P123366 → P1236
 ```
 
-## Daitch-Mokotoff SOUNDEX dla języka polskiego -- wyniki
++ **Dopełnij/przytnij do 4 znaków**
+```
+SMITH → S53 → S530
+PFISTER → P1236 → P123
+```
 
-| Nazwisko   | Kod SOUNDEX | Grupa |
-|------------|-------------|-------|
-| Kowalski   | K48940      | A     |
-| Kowalsky   | K48940      | A     |
-| Kowaliski  | K48940      | A     |
-| Nowak      | N840000     | B     |
-| Novak      | N840000     | B     |
-| Wiśniewski | W464800     | C     |
-| Wisniewski | W464800     | C     |
-| Wójcik     | W154000     | D     |
-| Wojcik     | W154000     | D     |
+## Algortym `SOUNDEX` -- krok po kroku
 
-## Daitch-Mokotoff SOUNDEX dla języka polskiego -- podsumowanie
+Przykład: SMITH → S530
 
-Praktyczne zastosowania:
++ Pierwsza litera: S 
++ Mapowanie: S-M-I-T-H → S-5-[I]-3-[H] → S-5-3
++ Duplikaty: Brak
++ Dopełnienie: S53 → S530
 
--   **Deduplikacja baz danych** - identyfikacja duplikatów z błędami
-    pisowni
--   **Wyszukiwanie rozmyte** - znajdowanie podobnych nazwisk
--   **Łączenie rekordów** - integracja danych z różnych źródeł
+## Algortym `SOUNDEX` -- krok po kroku
 
-Zalety dla języka polskiego:
+Przykład: WILLIAMS → W452
 
-✓ Uwzględnia polskie znaki diakrytyczne\
-✓ Radzi sobie z typowymi błędami pisowni\
-✓ Skuteczny dla nazwisk słowiańskich\
-✓ Lepszy niż standardowy SOUNDEX dla polszczyzny
++ Pierwsza litera: W
++ Mapowanie: W-I-L-L-I-A-M-S → W-[I]-4-4-[I]-[A]-5-2 → W-4-4-5-2
++ Duplikaty: W-4-4-5-2 → W-4-5-2
++ Przycinanie: W452 → W452
 
+## Algortym `SOUNDEX` -- przykład w R
+
+
+```{r}
+RecordLinkage::soundex("SMITH")
+RecordLinkage::soundex("WILLIAMS")
+```
+
+```{r}
+stringdist::phonetic("SMITH")
+stringdist::phonetic("WILLIAMS")
+```
+
+## Daitch-Mokotoff SOUNDEX 
+
+Nazwiska są kodowane do sześciu cyfr, gdzie każda cyfra reprezentuje dźwięk wymieniony w tabeli kodowania ([źródło](https://www.jewishgen.org/infofiles/soundex.html)).
+
+1. Gdy nazwisko ma za mało kodowanych dźwięków na sześć cyfr, używaj zer do uzupełnienia do sześciu cyfr. 
+    + Przykład: `GOLDEN`, które ma tylko cztery kodowane dźwięki `[G-L-D-N]`, jest kodowane jako `583600`.
+
+2. Litery A, E, I, O, U, J i Y są zawsze kodowane na początku nazwiska, jak w `Alpert 087930`. W każdej innej sytuacji są ignorowane, z wyjątkiem przypadku gdy dwie z nich tworzą parę i para poprzedza samogłoskę, jak w `Breuer 791900`, ale nie w Freud.
+
+3. Litera H jest kodowana na początku nazwiska, jak w Haber 579000, lub przed samogłoską, jak w Manheim 665600, w przeciwnym razie nie jest kodowana.
+
+4. Gdy sąsiadujące dźwięki mogą się połączyć w większy dźwięk, otrzymują numer kodu większego dźwięku. Mintz nie jest kodowane jako `MIN-T-Z`, ale `MIN-TZ` 664000.
+
+## Daitch-Mokotoff SOUNDEX 
+
+5. Gdy sąsiadujące litery mają ten sam numer kodu, są kodowane jako jeden dźwięk, jak w TOPF, które nie jest kodowane TO-P-F 377000, ale TO-PF 370000. Wyjątkami od tej reguły są kombinacje liter MN i NM, których litery są kodowane oddzielnie, jak w Kleinman, które jest kodowane 586660, a nie 586600.
+
+6. Gdy nazwisko składa się z więcej niż jednego słowa, jest kodowane jakby to było jedno słowo, takie jak "Ben Aron", które jest traktowane jako "Benaron".
+
+7. Kilka liter i kombinacji liter stwarza problem, że mogą brzmieć na jeden z dwóch sposobów. Litery i kombinacje liter CH, CK, C, J i RS mają przypisane dwa możliwe numery kodów.
+
+
+## Kluczowe reguły
+
+- **NC** = nie kodowane
+- **Pozycja ma znaczenie**: Start/Before vowel/Any other
+- **Kombinacje liter** mają priorytet nad pojedynczymi
+- **Maksymalna długość**: 6 cyfr, uzupełniane zerami
+
+
+## Przykład: KOWALSKI
+
+### Mapowanie krok po kroku:
+```
+K - O - W - A - L - S - K - I
+↓   ↓   ↓   ↓   ↓   ↓   ↓   ↓
+5 - NC- 7 - NC- 8 - 4 - 5 - NC
+```
+
+**Wynik:** K(5) + W(7) + L(8) + S(4) + K(5) = `57845`
+**Uzupełnione do 6 cyfr:** `578450`
+
+
+## Przykład: WÓJCIK
+
+### Normalizacja: **WÓJCIK** → **WOJCIK** (Ó nie ma w oryginalnej tabeli)
+
+### Mapowanie krok po kroku:
+```
+W - O - J - C - I - K
+↓   ↓   ↓   ↓   ↓   ↓
+7 - NC- ? - ? - NC- 5
+```
+
+### Dwuznaczności:
+
+- **J** (przed samogłoską I) → **1** (Y) lub **4** (DZH)
+- **C** (przed samogłoską I) → **5** (K) lub **4** (TZ)
+
+### Wszystkie kombinacje:
+```
+Wariant 1: 7 - NC - 1 - 5 - NC - 5 = 71550
+Wariant 2: 7 - NC - 1 - 4 - NC - 5 = 71450  
+Wariant 3: 7 - NC - 4 - 5 - NC - 5 = 74550
+Wariant 4: 7 - NC - 4 - 4 - NC - 5 = 74450
+```
+
+**Wyniki:** `71550`, `71450`, `74550`, `74450`
+
+ 
 ## Pakiety w R do probabilistycznego blokowania rekordów
 
 -   `klsh` -- pakiet wykorzystuje metodę *Locality-sensitive hashing*
@@ -1097,11 +1141,6 @@ https://www.robinlinacre.com/probabilistic_linkage/
 
 Określenie prawdopodobieństwa, że dwa rekordy odnoszą się do tej samej osoby na podstawie dostępnych danych.
 
-**Podstawowe założenia**
-
-- **Zbiór M** - pary rekordów odnoszące się do tej samej osoby (matches)
-- **Zbiór U** - pary rekordów odnoszące się do różnych osób (non-matches)  
-- **Zbiór A** - wszystkie możliwe pary rekordów
 
 **Przykład polskich danych**
 
@@ -1113,7 +1152,16 @@ Rekord 2: Jan Kowalski, M, 1985-03-15, Warszawa
 **Pytanie:** Czy to ta sama osoba?  
 Model Fellegi-Sunter da nam na to odpowiedź w postaci prawdopodobieństwa.
 
-**Wzór podstawowy**
+# Model Fellegiego-Suntera (konkretnie)
+
+**Podstawowe założenia**
+
+- **Zbiór M** - pary rekordów odnoszące się do tej samej osoby (matches)
+- **Zbiór U** - pary rekordów odnoszące się do różnych osób (non-matches)  
+- **Zbiór A** - wszystkie możliwe pary rekordów
+
+
+**Podstawowy wzór**
 
 $$P(\text{match} | \gamma) = \frac{P(\gamma | M) \cdot P(M)}{P(\gamma | M) \cdot P(M) + P(\gamma | U) \cdot P(U)}$$
 
@@ -1131,10 +1179,12 @@ Co oznaczają poszczególne elementy:
 - To jest to, czego szukamy - **odpowiedź modelu**
 
 **Licznik:**
+
 - **P(γ | M)** - prawdopodobieństwo obserwacji wektora γ **GDY** para należy do M (to ta sama osoba)
 - **P(M)** - prawdopodobieństwo wstępne, że losowa para to dopasowanie
 
 **Mianownik:**
+
 - **P(γ | M) · P(M)** - prawdopodobieństwo obserwacji γ gdy to dopasowanie
 - **P(γ | U) · P(U)** - prawdopodobieństwo obserwacji γ gdy to nie-dopasowanie
 - **Suma = P(γ)** - całkowite prawdopodobieństwo obserwacji γ
@@ -1142,29 +1192,14 @@ Co oznaczają poszczególne elementy:
 ## Wyjaśnienie $P(\text{match} | \gamma)$ 
 
 **Wzór odpowiada na pytanie:**
+
 > "Mając obserwację γ, jakie jest prawdopodobieństwo, że to dopasowanie?"
 
 **Logika:**
+
 1. **Licznik** - jak prawdopodobne jest γ jeśli to dopasowanie × szansa na dopasowanie
 2. **Mianownik** - jak prawdopodobne jest γ we wszystkich możliwych przypadkach
 3. **Wynik** - proporcja "dowodów za" do "wszystkich dowodów"
-
-## Wyjaśnienie $P(\text{match} | \gamma)$ 
-
-**Dane:**
-
-- γ = (1,1,0) - imię i nazwisko się zgadzają, data urodzenia nie
-- P(M) = 0.0001 (1 na 10,000)
-- P($\gamma$ | M) = 0.05 (5% szans na błąd w dacie dla tej samej osoby)
-- P($\gamma$ | U) = 0.00002 (bardzo mała szansa przypadkowej zgodności imienia i nazwiska)
-
-**Obliczenie:**
-
-$$P(\text{match} | \gamma) = \frac{0.05 \times 0.0001}{0.05 \times 0.0001 + 0.00002 \times 0.9999} = \frac{0.000005}{0.000005 + 0.000019998} = 0.2$$
-
-**Wynik: 20%** -- mimo zgodności imienia i nazwiska, błąd w dacie obniża prawdopodobieństwo dopasowania.
-
-Wzór **równoważy** dowody za dopasowaniem z dowodami przeciw, uwzględniając jak rzadkie są dopasowania w ogóle.
 
 ## Definicja wektora porównań $\gamma$
 
@@ -1180,8 +1215,11 @@ $$\gamma_i = \begin{cases}
 ### Przykład porównania:
 
 **Dane:**
+
 - **Rekord A:** Anna Nowak, K, 1990-05-20, 00-001
 - **Rekord B:** Anna Nowak, K, 1990-05-20, 00-002
+
+## Definicja wektora porównań $\gamma$
 
 **Wektor γ:**
 
@@ -1210,6 +1248,8 @@ $$\gamma_i = \begin{cases}
 - $m_i \approx 1$ -- pole rzadko ma błędy dla tej samej osoby
 - $u_i \approx 0$ -- pole rzadko jest przypadkowo zgodne dla różnych osób
 
+## Parametry $m$ i $u$
+
 ### Przykładowe wartości dla polskich danych:
 
 | Pole |$m_i$ | $u_i$ | Interpretacja |
@@ -1219,6 +1259,26 @@ $$\gamma_i = \begin{cases}
 | Imię | 0.92 | 0.008 | Średnio unikalny |
 | Data ur. | 0.98 | 0.003 | Bardzo unikalny |
 | Płeć | 0.99 | 0.5 | Mało unikalny |
+
+Skąd je wziąć? Możemy mieć historyczne dane ale w praktyce estymujemy te parametry na podstawie danych wejściowych.
+
+## Wyjaśnienie $P(\text{match} | \gamma)$ 
+
+**Dane:**
+
+- γ = (1,1,0) - imię i nazwisko się zgadzają, data urodzenia nie
+- P(M) = 0.0001 (1 na 10,000)
+- P($\gamma$ | M) = 0.05 (5% błąd w dacie dla tej samej osoby)
+- P($\gamma$ | U) = 0.00002 (bardzo niskie prawdopodobieństwo przypadkowej zgodności imienia i nazwiska)
+
+**Obliczenie:**
+
+$$P(\text{match} | \gamma) = \frac{0.05 \times 0.0001}{0.05 \times 0.0001 + 0.00002 \times 0.9999} = \frac{0.000005}{0.000005 + 0.000019998} = 0.2$$
+
+**Wynik: 20%** -- mimo zgodności imienia i nazwiska, błąd w dacie obniża prawdopodobieństwo dopasowania.
+
+Wzór **równoważy** dowody za dopasowaniem z dowodami przeciw, uwzględniając jak rzadkie są dopasowania w ogóle.
+
 
 ## Wyznaczanie wag częściowych
 
@@ -1230,7 +1290,7 @@ $$w_i^{(1)} = \log_2\left(\frac{m_i}{u_i}\right)$$
 
 $$w_i^{(0)} = \log_2\left(\frac{1-m_i}{1-u_i}\right)$$
 
-### Przykład obliczenia dla imienia:
+## Przykład obliczenia dla imienia:
 
 **Dane:** $m_i$ = 0.92, $u_i$ = 0.008
 
@@ -1267,7 +1327,7 @@ $$w_i^{(0)} = \log_2\left(\frac{1-0.92}{1-0.008}\right) = \log_2\left(\frac{0.08
 
 $$P(M) = \frac{\text{liczba oczekiwanych par dopasowanych}}{\text{łączna liczba par}}$$
 
-### Przykład obliczenia:
+### Przykład:
 
 **Scenariusz:** 
 
@@ -1277,7 +1337,10 @@ $$P(M) = \frac{\text{liczba oczekiwanych par dopasowanych}}{\text{łączna liczb
 - Oczekiwane dopasowania: ~9,500 (95% pacjentów ma ubezpieczenie)
 - P(M) = 9,500 / 120,000,000 = 0.0000792
 
-### W praktyce:
+## Waga wstępna (prior)
+
+
+### Przykład:
 
 Większość par to nie-dopasowania, dlatego P(M) jest bardzo małe.
 
@@ -1309,6 +1372,8 @@ $\gamma = (1, 1, 1, 1, 1)$ -- wszystkie pola się zgadzają
 | Data ur. | 1 | +8.36 |
 | PESEL | 1 | +23.25 |
 
+## Kompletny przykład - krok po kroku
+
 ### Krok 3: Suma wag
 
 $$W = w_0 + \sum_{i=1}^{5} w_i = -13.64 + 6.85 + 8.89 + 0.99 + 8.36 + 23.25 = +34.70$$
@@ -1327,13 +1392,6 @@ $$P(\text{match}) = \frac{2^{34.70}}{1 + 2^{34.70}} = \frac{2.79 \times 10^{10}}
 ### Interpretacja:
 
 **Prawdopodobieństwo = 99.99999996%** - praktycznie pewność, że to ta sama osoba.
-
-### Skala interpretacji (przykładowa)
-
-- **> 95%** - bardzo prawdopodobne dopasowanie
-- **80-95%** - prawdopodobne dopasowanie  
-- **20-80%** - niepewne
-- **< 20%** - prawdopodobnie różne osoby
 
 ## Przykład z częściową niezgodnością
 
@@ -1355,6 +1413,8 @@ $\gamma = (0, 1, 1, 1, 0)$ -- imię i miasto się różnią
 | Płeć | 1 | +0.99 |
 | Data ur. | 1 | +8.36 |
 | Miasto | 0 | -2.15 |
+
+## Przykład z częściową niezgodnością
 
 ### Krok 3: Obliczenia
 
