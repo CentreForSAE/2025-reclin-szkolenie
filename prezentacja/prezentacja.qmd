@@ -242,10 +242,9 @@ stringsimmatrix(a = c("Beręsewicz", "Berencewicz", "Beręcewicz"),
 
 ## Najdłuższy wspólny podciąg
 
--   ang. *Longest Common Substring* (LCS)
+-   ang. *Longest Common Substring* (LCS) -- implementacja w pakiecie `stringdist`
 
--   Odległość LCS jest wtedy liczbą niesparowanych znaków w obu
-    łańcuchach
+-  zlicza liczbę usunięć i wstawień niezbędnych do przekształcenia jednego ciągu w inny.
 
     |     |     |     |       |       |     |     |     |     |     |
     |-----|-----|-----|-------|-------|-----|-----|-----|-----|-----|
