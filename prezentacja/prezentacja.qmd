@@ -933,12 +933,12 @@ Przykład: WILLIAMS → W452
 ## Algortym `SOUNDEX` -- przykład w R
 
 
-```{r}
+```{r echo=T}
 RecordLinkage::soundex("SMITH")
 RecordLinkage::soundex("WILLIAMS")
 ```
 
-```{r}
+```{r echo=TRUE}
 stringdist::phonetic("SMITH")
 stringdist::phonetic("WILLIAMS")
 ```
